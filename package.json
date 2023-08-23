@@ -1,0 +1,17 @@
+{
+  "name": "Manos-association-ManAss ",
+  "version": "0.1.0",
+  "description": "Errei fui mlk pro soccer é um jogo de futebol no estilo 1v1 no qual você tem o objetivo de marcar um gol no seu adversário. Você poderá jogar com os principais jogadores da história do futebol. Errei fui mlk pro soccer tem como ambiente uma copa do mundo atemporal onde cada jogador terá seu uniforme de seleção da sua respectiva era jogada.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Felipe Laurentino <felipelaurentino06@gmail.com> e Arthur marques",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.47.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.0.2",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
