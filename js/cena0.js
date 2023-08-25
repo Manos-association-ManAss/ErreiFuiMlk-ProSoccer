@@ -1,10 +1,14 @@
-export default class cena0 extends Phaser.Scene {
+export default class cena0 extends Phaser.min.Scene {
   constructor () {
     super('cena0')
   }
 
   preload () {
     this.load.image('ifsc-sj-2014', './ifsc-sj-2014.png')
+    this.load.spritesheet('derek', '../assets/derek.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
   }
 
   create () {
@@ -18,7 +22,7 @@ export default class cena0 extends Phaser.Scene {
     })
   }
 
-  update() {} 
+  update () {}
 
   countdown () {
     this.timer -= 1
