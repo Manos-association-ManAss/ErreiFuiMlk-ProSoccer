@@ -1,4 +1,6 @@
-import mapa1 from './mapa1.js'
+// import abertura from './abertura.js'
+import sala from './sala.js'
+// import mapa1 from './mapa1.js'
 import config from './config.js'
 
 class Game extends Phaser.Game {
@@ -35,9 +37,11 @@ class Game extends Phaser.Game {
       console.log('Conectado ao servidor!')
     })
 
-    this.scene.add('mapa1', mapa1)
+    // this.scene.add('abertura', abertura)
+    this.scene.add('sala', sala)
+    // this.scene.add('mapa1', mapa1)
 
-    this.scene.start('mapa1')
+    this.scene.start('sala')
   }
 }
 
