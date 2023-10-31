@@ -1,8 +1,10 @@
-// import abertura from './abertura.js'
+import config from './config.js'
+import abertura from './abertura.js'
 import sala from './sala.js'
 // import mapa1 from './mapa1.js'
-import config from './config.js'
 
+
+/* global Phaser */
 class Game extends Phaser.Game {
   constructor () {
     super(config)
@@ -11,6 +13,7 @@ class Game extends Phaser.Game {
 
     let iceServers
     if (window.location.host === 'feira-de-jogos.sj.ifsc.edu.br') {
+      /* global io */
       this.socket = io.connect({ path: '/adcipt20232/socket.io/' })
       iceServers = [
         {
@@ -37,11 +40,11 @@ class Game extends Phaser.Game {
       console.log('Conectado ao servidor!')
     })
 
-    // this.scene.add('abertura', abertura)
+    this.scene.add('abertura', abertura)
     this.scene.add('sala', sala)
     // this.scene.add('mapa1', mapa1)
 
-    this.scene.start('sala')
+    this.scene.start('abertura')
   }
 }
 

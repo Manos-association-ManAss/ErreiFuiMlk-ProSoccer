@@ -17,6 +17,14 @@ export default class mapa1 extends Phaser.Scene {
       frameWidth: 47,
       frameHeight: 64
     })
+    this.load.spritesheet('YE-pulo', '../assets/ye-pulo.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+    this.load.spritesheet('tyler-pulo', '../assets/tyler-pulo.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
     /* botões */
     this.load.spritesheet('direita', '../assets/direita.png', {
       frameWidth: 64,
@@ -27,14 +35,6 @@ export default class mapa1 extends Phaser.Scene {
       frameHeight: 64
     })
     this.load.spritesheet('cima', '../assets/cima.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-    this.load.spritesheet('YE-pulo', '../assets/ye-pulo.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-    this.load.spritesheet('tyler-pulo', '../assets/tyler-pulo.png', {
       frameWidth: 64,
       frameHeight: 64
     })

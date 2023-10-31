@@ -1,3 +1,4 @@
+/* global Phaser */
 export default class abertura extends Phaser.Scene {
   constructor () {
     super('abertura')
@@ -6,7 +7,7 @@ export default class abertura extends Phaser.Scene {
   preload () {
     this.load.image('abertura', './assets/abertura/abertura.png')
 
-    this.load.spritesheet('botãoA', './assets/mapa/BotãoAbertura.png', {
+    this.load.spritesheet('botãoA', './assets/abertura/BotãoAbertura.png', {
       frameWidth: 800,
       frameHeight: 450
     })
@@ -19,7 +20,12 @@ export default class abertura extends Phaser.Scene {
       .setInteractive()
       .on('pointerdown', () => {
         this.game.scene.stop('abertura')
-        // this.scale.startFullscreen()
+        this.game.scene.start('sala')
+      })
+    this.botão = this.add.sprite(400, 225, 'botãoA', 0)
+      .setInteractive()
+      .on('pointerdown', () => {
+        this.game.scene.stop('abertura')
         this.game.scene.start('sala')
       })
   }
