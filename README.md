@@ -1,2 +1,2 @@
 # Kane Quest
-Errei fui mlk pro soccer é um jogo de futebol no estilo 1v1 no qual você tem o objetivo de marcar um gol no seu adversário. Você poderá jogar com os principais jogadores da história do futebol. Errei fui mlk pro soccer tem como ambiente uma copa do mundo atemporal onde cada jogador terá seu uniforme de seleção da sua respectiva era jogada. 
+Kane Quest é um jogo onde kanye west jutamente com seu fiel aliado, Tyler, partirão em uma aventura para alcançar a ascenção artistica em um mundo lotado de caos e inimigos do mundo do hip-hop querendo a sua ruína.
