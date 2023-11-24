@@ -6,7 +6,7 @@ export default class mapa1 extends Phaser.Scene {
   preload () {
     /* mapa */
     this.load.tilemapTiledJSON('mapa', '../assets/mapa/mapa.json')
-    this.load.image('Tileset', '../assets/mapa/MapaTiles.png')
+    this.load.image('MapaTiles', '../assets/mapa/MapaTiles.png')
 
     /* personagem */
     this.load.spritesheet('YE', '../assets/YE.png', {
@@ -52,7 +52,7 @@ export default class mapa1 extends Phaser.Scene {
       key: 'mapa'
     })
 
-    this.tilesetTile1 = this.tilemapMapa.addTilesetImage('Tileset')
+    this.tilesetTile1 = this.tilemapMapa.addTilesetImage('MapaTiles')
 
     this.layerfundo = this.tilemapMapa.createLayer('fundo', [this.tilesetTile1])
     this.layeratras2 = this.tilemapMapa.createLayer('atras2', [this.tilesetTile1])
@@ -64,14 +64,14 @@ export default class mapa1 extends Phaser.Scene {
     if (this.game.jogadores.primeiro === this.game.socket.id) {
       this.local = 'YE'
       this.remoto = 'tyler'
-      this.personagem = this.physics.add.sprite(1000, 2000, this.local, 18)
+      this.personagem = this.physics.add.sprite(1000, -80, this.local, 18)
       this.cameras.main.startFollow(this.personagem)
-      this.personagemRemoto = this.add.sprite(1184, -80, this.remoto, 18)
+      this.personagemRemoto = this.add.sprite(1000, -80, this.remoto, 18)
     } else if (this.game.jogadores.segundo === this.game.socket.id) {
       this.local = 'tyler'
       this.remoto = 'YE'
-      this.personagemRemoto = this.add.sprite(-350, -80, this.remoto, 18)
-      this.personagem = this.physics.add.sprite(1184, -80, this.local, 18)
+      this.personagemRemoto = this.add.sprite(1000, -80, this.remoto, 18)
+      this.personagem = this.physics.add.sprite(1000, -80, this.local, 18)
       this.cameras.main.startFollow(this.personagem)
 
       navigator.mediaDevices.getUserMedia({ video: false, audio: true })
@@ -242,8 +242,6 @@ export default class mapa1 extends Phaser.Scene {
       repeat: -1
     })
 
-    this.anims.create({})
-
     /* botão pra direita */
     this.direita = this.add.sprite(190, 400, 'direita', 0)
       .setScrollFactor(0)
@@ -252,15 +250,11 @@ export default class mapa1 extends Phaser.Scene {
         this.direita.setFrame(1)
         this.personagem.anims.play('YE-direita', true)
         this.personagem.setVelocityX(200)
-        this.personagemRemoto.anims.play('tyler-direita', true)
-        this.personagemRemoto.setVelocityX(200)
       })
       .on('pointerup', () => {
         this.direita.setFrame(0)
         this.personagem.anims.play('YE-paradoD')
         this.personagem.setVelocityX(0)
-        this.personagemRemoto.anims.play('tyler-paradoD')
-        this.personagemRemoto.setVelocityX(0)
       })
 
     /* botão pra esquerda */
@@ -271,15 +265,11 @@ export default class mapa1 extends Phaser.Scene {
         this.esquerda.setFrame(1)
         this.personagem.anims.play('YE-esquerda', true)
         this.personagem.setVelocityX(-200)
-        this.personagemRemoto.anims.play('tyler-esquerda', true)
-        this.personagemRemoto.setVelocityX(-200)
       })
       .on('pointerup', () => {
         this.esquerda.setFrame(0)
         this.personagem.anims.play('YE-paradoE')
         this.personagem.setVelocityX(0)
-        this.personagemRemoto.anims.play('tyler-paradoE')
-        this.personagemRemoto.setVelocityX(0)
       })
 
     /* botão pra cima */
@@ -292,16 +282,10 @@ export default class mapa1 extends Phaser.Scene {
           this.personagem.anims.play('YE-pulo', true)
           this.personagem.setVelocityY(-500)
         }
-        if (this.personagem.body.blocked.down) {
-          this.personagemRemoto.anims.play('tyler-pulo', true)
-          this.personagemRemoto.setVelocityY(-500)
-        }
       })
       .on('pointerup', () => {
         this.cima.setFrame(0)
         this.personagem.anims.play('YE-pulou')
-        this.cima.setFrame(0)
-        this.personagemRemoto.anims.play('tyler-pulou')
       })
 
     this.layerfundo.setCollisionByProperty({ collides: true })
