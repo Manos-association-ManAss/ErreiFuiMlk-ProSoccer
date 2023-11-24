@@ -3,7 +3,6 @@ import abertura from './abertura.js'
 import sala from './sala.js'
 // import mapa1 from './mapa1.js'
 
-
 /* global Phaser */
 class Game extends Phaser.Game {
   constructor () {
