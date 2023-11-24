@@ -17,7 +17,7 @@ export default class mapa1 extends Phaser.Scene {
       frameWidth: 47,
       frameHeight: 64
     })
-    this.load.spritesheet('YE-pulo', '../assets/ye-pulo.png', {
+    this.load.spritesheet('YE-pulo', '../assets/YE-pulo.png', {
       frameWidth: 64,
       frameHeight: 64
     })
@@ -78,11 +78,13 @@ export default class mapa1 extends Phaser.Scene {
         .then((stream) => {
           this.game.localConnection = new RTCPeerConnection(this.game.ice_servers)
 
-          this.game.localConnection.onicecandidate = ({ candidate }) =>
-            candidate && this.game.socket.emit('candidate', this.game.sala, candidate)
+          this.game.localConnection.onicecandidate = function ({ candidate }) {
+            candidate && globalThis.game.socket.emit('candidate', globalThis.game.sala, candidate)
+          }
 
-          this.game.localConnection.ontrack = ({ streams: [stream] }) =>
-            this.game.audio.srcObject = stream
+          this.game.localConnection.ontrack = function ({ streams: [stream] }) {
+            globalThis.game.audio.srcObject = stream
+          }
 
           stream.getTracks()
             .forEach((track) => this.game.localConnection.addTrack(track, stream))
@@ -99,11 +101,13 @@ export default class mapa1 extends Phaser.Scene {
     this.game.socket.on('offer', (description) => {
       this.game.remoteConnection = new RTCPeerConnection(this.game.ice_servers)
 
-      this.game.remoteConnection.onicecandidate = ({ candidate }) =>
-        candidate && this.game.socket.emit('candidate', this.game.sala, candidate)
+      this.game.remoteConnection.onicecandidate = function ({ candidate }) {
+        candidate && globalThis.game.socket.emit('candidate', globalThis.game.sala, candidate)
+      }
 
-      this.game.remoteConnection.ontrack = ({ streams: [midia] }) =>
-        this.game.audio.srcObject = midia
+      this.game.remoteConnection.ontrack = function ({ streams: [midia] }) {
+        globalThis.game.audio.srcObject = midia
+      }
 
       this.game.midias.getTracks()
         .forEach((track) => this.game.remoteConnection.addTrack(track, this.game.midias))
@@ -123,122 +127,55 @@ export default class mapa1 extends Phaser.Scene {
       conn.addIceCandidate(new RTCIceCandidate(candidate))
     })
 
+    this.cameras.main.startFollow(this.personagem)
+
     /* animações */
     this.anims.create({
-      key: 'YE-paradoD',
-      frames: this.anims.generateFrameNumbers('YE', {
-        start: 34,
-        end: 34
+      key: 'personagem-parado',
+      frames: this.anims.generateFrameNumbers(this.local, {
+        start: 23,
+        end: 23
       }),
       frameRate: 1
     })
 
     this.anims.create({
-      key: 'YE-paradoE',
-      frames: this.anims.generateFrameNumbers('YE', {
-        start: 35,
-        end: 35
-      }),
-      frameRate: 1
-    })
-
-    this.anims.create({
-      key: 'YE-direita',
-      frames: this.anims.generateFrameNumbers('YE', {
+      key: 'personagem-direita',
+      frames: this.anims.generateFrameNumbers(this.local, {
         start: 0,
-        end: 18
+        end: 8
       }),
-      frameRate: 15,
+      frameRate: 12,
       repeat: -1
     })
 
     this.anims.create({
-      key: 'YE-esquerda',
-      frames: this.anims.generateFrameNumbers('YE', {
-        start: 20,
-        end: 33
+      key: 'personagem-esquerda',
+      frames: this.anims.generateFrameNumbers(this.local, {
+        start: 16,
+        end: 22
       }),
-      frameRate: 15,
+      frameRate: 12,
       repeat: -1
     })
 
     this.anims.create({
-      key: 'YE-pulo',
-      frames: this.anims.generateFrameNumbers('YE-pulo', {
-        start: 0,
-        end: 3
+      key: 'personagem-pulo',
+      frames: this.anims.generateFrameNumbers(this.local, {
+        start: 25,
+        end: 27
       }),
-      frameRate: 3,
+      frameRate: 12,
       repeat: -1
     })
 
     this.anims.create({
-      key: 'YE-pulou',
-      frames: this.anims.generateFrameNumbers('YE-pulo', {
-        start: 4,
-        end: 7
+      key: 'personagem-pulou',
+      frames: this.anims.generateFrameNumbers(this.local, {
+        start: 27,
+        end: 30
       }),
-      frameRate: 3,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'tyler-direita',
-      frames: this.anims.generateFrameNumbers('tyler', {
-        start: 0,
-        end: 35
-      }),
-      frameRate: 15,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'tyler-esquerda',
-      frames: this.anims.generateFrameNumbers('tyler', {
-        start: 36,
-        end: 71
-      }),
-      frameRate: 15,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'tyler-paradoD',
-      frames: this.anims.generateFrameNumbers('tyler', {
-        start: 72,
-        end: 77
-      }),
-      frameRate: 3,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'tyler-paradoE',
-      frames: this.anims.generateFrameNumbers('tyler', {
-        start: 78,
-        end: 83
-      }),
-      frameRate: 3,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'tyler-pulo',
-      frames: this.anims.generateFrameNumbers('tyler-pulo', {
-        start: 0,
-        end: 3
-      }),
-      frameRate: 3,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'tyler-pulou',
-      frames: this.anims.generateFrameNumbers('tyler-pulo', {
-        start: 4,
-        end: 6
-      }),
-      frameRate: 3,
+      frameRate: 12,
       repeat: -1
     })
 
@@ -250,17 +187,13 @@ export default class mapa1 extends Phaser.Scene {
       .setInteractive()
       .on('pointerdown', () => {
         this.direita.setFrame(1)
-        this.personagem.anims.play('YE-direita', true)
+        this.personagem.anims.play('personagem-direita', true)
         this.personagem.setVelocityX(200)
-        this.personagemRemoto.anims.play('tyler-direita', true)
-        this.personagemRemoto.setVelocityX(200)
       })
       .on('pointerup', () => {
         this.direita.setFrame(0)
-        this.personagem.anims.play('YE-paradoD')
+        this.personagem.anims.play('personagem-parado')
         this.personagem.setVelocityX(0)
-        this.personagemRemoto.anims.play('tyler-paradoD')
-        this.personagemRemoto.setVelocityX(0)
       })
 
     /* botão pra esquerda */
@@ -269,17 +202,13 @@ export default class mapa1 extends Phaser.Scene {
       .setInteractive()
       .on('pointerdown', () => {
         this.esquerda.setFrame(1)
-        this.personagem.anims.play('YE-esquerda', true)
+        this.personagem.anims.play('personagem-esquerda', true)
         this.personagem.setVelocityX(-200)
-        this.personagemRemoto.anims.play('tyler-esquerda', true)
-        this.personagemRemoto.setVelocityX(-200)
       })
       .on('pointerup', () => {
         this.esquerda.setFrame(0)
-        this.personagem.anims.play('YE-paradoE')
+        this.personagem.anims.play('personagem-parado')
         this.personagem.setVelocityX(0)
-        this.personagemRemoto.anims.play('tyler-paradoE')
-        this.personagemRemoto.setVelocityX(0)
       })
 
     /* botão pra cima */
@@ -289,19 +218,13 @@ export default class mapa1 extends Phaser.Scene {
       .on('pointerdown', () => {
         this.cima.setFrame(1)
         if (this.personagem.body.blocked.down) {
-          this.personagem.anims.play('YE-pulo', true)
+          this.personagem.anims.play('personagem-pulo', true)
           this.personagem.setVelocityY(-500)
-        }
-        if (this.personagem.body.blocked.down) {
-          this.personagemRemoto.anims.play('tyler-pulo', true)
-          this.personagemRemoto.setVelocityY(-500)
         }
       })
       .on('pointerup', () => {
         this.cima.setFrame(0)
-        this.personagem.anims.play('YE-pulou')
-        this.cima.setFrame(0)
-        this.personagemRemoto.anims.play('tyler-pulou')
+        this.personagem.anims.play('personagem-pulou')
       })
 
     this.layerfundo.setCollisionByProperty({ collides: true })

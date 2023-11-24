@@ -92,17 +92,9 @@ export default class abertura extends Phaser.Scene {
     this.game.socket.on('jogadores', (jogadores) => {
       console.log(jogadores)
       if (jogadores.segundo) {
-        this.mensagem.destroy()
         this.game.jogadores = jogadores
         this.game.scene.stop('sala')
         this.game.scene.start('mapa1')
-      } else if (jogadores.primeiro) {
-        this.mensagem.setText('Aguardando segundo jogador...')
-        navigator.mediaDevices.getUserMedia({ video: false, audio: true })
-          .then((stream) => {
-            this.game.midias = stream
-          })
-          .catch((error) => console.error(error))
       }
     })
   }
