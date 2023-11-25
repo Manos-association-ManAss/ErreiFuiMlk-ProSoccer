@@ -25,6 +25,43 @@ export default class mapa1 extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64
     })
+
+    /* vilão */
+    this.load.spritesheet('bike', '../assets/bike.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+
+    this.load.spritesheet('cudi', '../assets/cudi.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+
+    this.load.spritesheet('drake', '../assets/drake.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+
+    this.load.spritesheet('graduation', '../assets/graduation.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+
+    this.load.spritesheet('pau', '../assets/pau.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+
+    this.load.spritesheet('terra', '../assets/terra.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+
+    this.load.spritesheet('twitter', '../assets/twitter.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+
     /* botões */
     this.load.spritesheet('direita', '../assets/direita.png', {
       frameWidth: 64,
@@ -39,7 +76,7 @@ export default class mapa1 extends Phaser.Scene {
       frameHeight: 64
     })
 
-    this.load.audio('trilha', './assets/allofthelights.mp3')
+    this.load.audio('trilha', './assets/sons/allofthelights.mp3')
   }
 
   create () {
@@ -238,6 +275,13 @@ export default class mapa1 extends Phaser.Scene {
     this.physics.add.collider(this.personagem, this.layeratras)
     this.physics.add.collider(this.personagem, this.layeratras2)
     this.physics.add.collider(this.personagem, this.layerfundo)
+    this.physics.add.collider(this.personagem, this.bike)
+    this.physics.add.collider(this.personagem, this.cudi)
+    this.physics.add.collider(this.personagem, this.drake)
+    this.physics.add.collider(this.personagem, this.graduation)
+    this.physics.add.collider(this.personagem, this.pau)
+    this.physics.add.collider(this.personagem, this.terra)
+    this.physics.add.collider(this.personagem, this.twitter)
   }
 
   update () { }
