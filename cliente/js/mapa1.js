@@ -33,6 +33,10 @@ export default class mapa1 extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     })
+    this.load.spritesheet('vida', '../assets/vida.png', {
+      frameWidth: 128,
+      frameHeight: 128
+    })
 
     /* vilão */
     this.load.spritesheet('bike', '../assets/bike.png', {
@@ -115,6 +119,16 @@ export default class mapa1 extends Phaser.Scene {
       this.local = 'YE'
       this.remoto = 'tyler'
       this.personagem = this.physics.add.sprite(750, -280, this.local, 18)
+      this.personagem.vida = 1
+      this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
+      this.vidasSpritesheet.setScrollFactor(0)
+      this.anims.create({
+        key: 'perdeuVida',
+        frames: this.anims.generateFrameNumbers('vidasSpritesheetKey', { start: 1, end: 13 }),
+        frameRate: 10, // Ajuste a velocidade da animação conforme necessário
+        repeat: 0, // Não repete a animação
+        hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
+      })
       this.cameras.main.startFollow(this.personagem)
       this.personagemRemoto = this.add.sprite(750, -280, this.remoto, 18)
     } else if (this.game.jogadores.segundo === this.game.socket.id) {
@@ -122,7 +136,39 @@ export default class mapa1 extends Phaser.Scene {
       this.remoto = 'YE'
       this.personagemRemoto = this.add.sprite(-750, -280, this.remoto, 18)
       this.personagem = this.physics.add.sprite(-750, -280, this.local, 18)
+      this.personagem.vida = 1
+      this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
+      this.vidasSpritesheet.setScrollFactor(0)
+      this.anims.create({
+        key: 'perdeuVida',
+        frames: this.anims.generateFrameNumbers('vidasSpritesheetKey', { start: 1, end: 13 }),
+        frameRate: 10, // Ajuste a velocidade da animação conforme necessário
+        repeat: 0, // Não repete a animação
+        hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
+      })
       this.cameras.main.startFollow(this.personagem)
+
+      function reduzirVida (personagem) {
+        personagem.vida--
+
+        if (personagem.vida <= 0) {
+          // A vida é zero ou menos, execute a lógica do game over aqui
+          // Por exemplo, você pode redirecionar para a cena 'gameOver'
+          this.scene.start('gameOver')
+        } else {
+          // Ainda há vida, você pode realizar outras ações aqui
+          console.log(`Vida restante: ${personagem.vida}`)
+        }
+      }
+      this.physics.add.collider(this.personagem, this.vilao, () => {
+        // Colisão entre personagem e vilão
+        reduzirVida(this.personagem, this.vidasSpritesheet)
+
+        // Reproduz a animação quando o jogador morrer
+        if (this.personagem.vida <= 0) {
+          this.vidasSpritesheet.play('perdeuVida')
+        }
+      })
 
       navigator.mediaDevices.getUserMedia({ video: false, audio: true })
         .then((stream) => {
