@@ -26,11 +26,11 @@ export default class mapa1 extends Phaser.Scene {
       frameHeight: 64
     })
     this.load.spritesheet('tyler-poder', '../assets/projetilT.png', {
-      frameWidth: 32,
+      frameWidth: 64,
       frameHeight: 32
     })
     this.load.spritesheet('ye-poder', '../assets/projetilY.png', {
-      frameWidth: 32,
+      frameWidth: 41,
       frameHeight: 32
     })
     this.load.spritesheet('vida', '../assets/vida.png', {
@@ -367,42 +367,67 @@ export default class mapa1 extends Phaser.Scene {
       .setScrollFactor(0)
       .setInteractive()
       .on('pointerdown', () => {
-        this.poder.setFrame(1)
-        this.personagem.anims.play('personagem-poderD', true)
-        this.personagem.setVelocityX(0)
+        // Verificar se o timer está completo (permite ação) antes de prosseguir
+        if (!poderTimer || poderTimer.getProgress() === 1) {
+          this.poder.setFrame(1)
+          this.personagem.anims.play('personagem-poderD', true)
+          this.personagem.setVelocityX(0)
 
-        this.personagem.on('animationcomplete-personagem-poderD', () => {
-          this.personagem.anims.play('personagem-paradoD')
+          this.personagem.on('animationcomplete-personagem-poderD', () => {
+            this.personagem.anims.play('personagem-paradoD')
+          })
+
+          // Criar um projétil
+          let projeteilSpritesheetKey
+          if (this.local === 'YE') {
+            projeteilSpritesheetKey = 'ye-poder'
+          } else if (this.local === 'tyler') {
+            projeteilSpritesheetKey = 'tyler-poder'
+          }
+
+          // Corrigir a posição inicial do projétil para evitar sobreposição com o personagem
+          const projeteilLocal = this.physics.add.sprite(this.personagem.x, this.personagem.y - 10, projeteilSpritesheetKey)
+          projeteilLocal.setVelocityX(800) // Mudar para 800 para ir para a direita
+
+          // Configurar animação para tocar os frames de 0 a 6 em loop
+          projeteilLocal.anims.create({
+            key: 'projeteilLoop',
+            frames: this.anims.generateFrameNumbers(projeteilSpritesheetKey, { start: 0, end: 6 }),
+            frameRate: 10,
+            repeat: -1 // Repetir indefinidamente
+          })
+
+          // Configurar animação para tocar os frames de 6 a 10 quando colidir com layerfundo
+          projeteilLocal.anims.create({
+            key: 'projeteilCollision',
+            frames: this.anims.generateFrameNumbers(projeteilSpritesheetKey, { start: 6, end: 10 }),
+            frameRate: 10,
+            repeat: 0 // Repetir uma vez
+          })
+
+          projeteilLocal.anims.play('projeteilLoop')
+
+          // Configurar colisão do projétil com o layerfundo
+          this.physics.add.collider(projeteilLocal, this.layerfundo, () => {
+            projeteilLocal.anims.play('projeteilCollision')
+            projeteilLocal.once('animationcomplete', () => {
+              projeteilLocal.destroy()
+            })
+          })
+
+          // Configurar a gravidade apenas enquanto o projétil estiver visível
+          projeteilLocal.body.setAllowGravity(false)
+
+          // Remover o projétil da simulação de física quando não estiver mais visível
+          projeteilLocal.on('animationcomplete', () => {
+            projeteilLocal.destroy()
+          })
+
+            // Iniciar o timer após a ação
+            poderTimer = this.time.addEvent({ delay: 250, callback: () => { }, loop: false })
+          }
         })
 
-        // Criar um projétil
-        let projeteilSpritesheetKey
-        if (this.local === 'YE') {
-          projeteilSpritesheetKey = 'ye-poder'
-        } else if (this.local === 'tyler') {
-          projeteilSpritesheetKey = 'tyler-poder'
-        }
-
-        // Corrigir a posição inicial do projétil para evitar sobreposição com o personagem
-        const projeteilLocal = this.physics.add.sprite(this.personagem.x, this.personagem.y - 10, projeteilSpritesheetKey)
-        projeteilLocal.setVelocityX(800) // Mudar para 800 para ir para a direita
-
-        // Configurar colisão do projétil com o layerfundo
-        this.physics.add.collider(projeteilLocal, this.layerfundo, () => {
-          projeteilLocal.destroy() // Destruir o projétil ao colidir com o layerfundo
-        })
-
-        // Configurar a gravidade apenas enquanto o projétil estiver visível
-        projeteilLocal.body.setAllowGravity(false)
-
-        // Remover o projétil da simulação de física quando não estiver mais visível
-        projeteilLocal.on('animationcomplete', () => {
-          projeteilLocal.destroy()
-
-          // Iniciar o timer após a ação
-          poderTimer = this.time.addEvent({ delay: 250, callback: () => { }, loop: false })
-        })
-      })
       .on('pointerup', () => {
         this.poder.setFrame(0)
         if (this.personagem.anims.currentAnim.key !== 'personagem-poderD') {
@@ -438,9 +463,31 @@ export default class mapa1 extends Phaser.Scene {
           const projeteilLocal = this.physics.add.sprite(this.personagem.x, this.personagem.y - 10, projeteilSpritesheetKey)
           projeteilLocal.setVelocityX(-800)
 
+          // Configurar animação para tocar os frames de 0 a 6 em loop
+          projeteilLocal.anims.create({
+            key: 'projeteilLoop',
+            frames: this.anims.generateFrameNumbers(projeteilSpritesheetKey, { start: 0, end: 6 }),
+            frameRate: 10,
+            repeat: -1 // Repetir indefinidamente
+          })
+
+          // Configurar animação para tocar os frames de 6 a 10 quando colidir com layerfundo
+          projeteilLocal.anims.create({
+            key: 'projeteilCollision',
+            frames: this.anims.generateFrameNumbers(projeteilSpritesheetKey, { start: 6, end: 10 }),
+            frameRate: 10,
+            repeat: 0 // Repetir uma vez
+          })
+
+          projeteilLocal.anims.play('projeteilLoop')
+
+
           // Configurar colisão do projétil com o layerfundo
           this.physics.add.collider(projeteilLocal, this.layerfundo, () => {
-            projeteilLocal.destroy() // Destruir o projétil ao colidir com o layerfundo
+            projeteilLocal.anims.play('projeteilCollision')
+            projeteilLocal.once('animationcomplete', () => {
+              projeteilLocal.destroy()
+            })
           })
 
           // Configurar a gravidade apenas enquanto o projétil estiver visível
