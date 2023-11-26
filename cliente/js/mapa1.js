@@ -110,7 +110,7 @@ export default class mapa1 extends Phaser.Scene {
       key: 'mapa'
     })
 
-    this.tilesetTile1 = this.tilemapMapa.addTilesetImage('Tileset')
+    this.tilesetTile1 = this.tilemapMapa.addTilesetImage('MapaTiles')
 
     this.layerfundo = this.tilemapMapa.createLayer('fundo', [this.tilesetTile1])
     this.layeratras2 = this.tilemapMapa.createLayer('atras2', [this.tilesetTile1])
@@ -122,7 +122,7 @@ export default class mapa1 extends Phaser.Scene {
     if (this.game.jogadores.primeiro === this.game.socket.id) {
       this.local = 'YE'
       this.remoto = 'tyler'
-      this.personagem = this.physics.add.sprite(750, -280, this.local, 18)
+      this.personagem = this.physics.add.sprite(1000, -80, this.local, 18)
       this.personagem.vida = 1
       this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
       this.vidasSpritesheet.setScrollFactor(0)
@@ -134,12 +134,12 @@ export default class mapa1 extends Phaser.Scene {
         hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
       })
       this.cameras.main.startFollow(this.personagem)
-      this.personagemRemoto = this.add.sprite(750, -280, this.remoto, 18)
+      this.personagemRemoto = this.add.sprite(1000, -80, this.remoto, 18)
     } else if (this.game.jogadores.segundo === this.game.socket.id) {
       this.local = 'tyler'
       this.remoto = 'YE'
-      this.personagemRemoto = this.add.sprite(-750, -280, this.remoto, 18)
-      this.personagem = this.physics.add.sprite(-650, -280, this.local, 18)
+      this.personagemRemoto = this.add.sprite(1000, -80, this.remoto, 18)
+      this.personagem = this.physics.add.sprite(1000, -80, this.local, 18)
       this.personagem.vida = 1
       this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
       this.vidasSpritesheet.setScrollFactor(0)
