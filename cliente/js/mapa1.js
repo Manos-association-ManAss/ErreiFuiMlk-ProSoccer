@@ -34,8 +34,12 @@ export default class mapa1 extends Phaser.Scene {
       frameHeight: 32
     })
     this.load.spritesheet('vida', '../assets/vida.png', {
-      frameWidth: 128,
-      frameHeight: 128
+      frameWidth: 48,
+      frameHeight: 48
+    })
+    this.load.spritesheet('balaoT', '../assets/balaoT.png', {
+      frameWidth: 800,
+      frameHeight: 450
     })
 
     /* vilão */
@@ -135,7 +139,7 @@ export default class mapa1 extends Phaser.Scene {
       this.local = 'tyler'
       this.remoto = 'YE'
       this.personagemRemoto = this.add.sprite(-750, -280, this.remoto, 18)
-      this.personagem = this.physics.add.sprite(-750, -280, this.local, 18)
+      this.personagem = this.physics.add.sprite(-650, -280, this.local, 18)
       this.personagem.vida = 1
       this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
       this.vidasSpritesheet.setScrollFactor(0)
@@ -458,6 +462,30 @@ export default class mapa1 extends Phaser.Scene {
           this.personagem.setVelocityX(0)
         }
       })
+
+    /* balões */
+    this.balaoT = this.add.sprite(-400, -225, 'balaoT', 0)
+    this.balaoT.visible = false // Inicialmente, o balão não está visível
+
+    this.textoBalaoT = this.add.text(this.balaoT.x - 70, this.balaoT.y - 40, '', {
+      fontSize: '18px',
+      fill: '#000',
+      wordWrap: { width: 140, useAdvancedWrap: true }
+    })
+
+    // Configurar animações para o balão de fala de Tyler
+    this.anims.create({
+      key: 'balaoT',
+      frames: this.anims.generateFrameNumbers('balaoT', { start: 0, end: 2 }),
+      frameRate: 5, // Ajuste conforme necessário
+      repeat: -1// -1 para loop
+    })
+    // Configurar evento para quando o texto do balão de fala de Tyler for concluído
+    this.balaoT.on('animationcomplete', () => {
+      this.balaoT.setFrame(0)// Voltar para o frame 0
+      this.balaoT.visible = false// Esconder o balão quando o texto acabar
+      this.balaoT.setScrollFactor(0)
+    })
 
     /* vilões */
     const viloesConfig = [
