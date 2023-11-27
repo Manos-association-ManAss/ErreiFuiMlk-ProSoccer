@@ -511,72 +511,77 @@ export default class mapa1 extends Phaser.Scene {
       })
 
     /* balões */
-    this.balaoT = this.add.sprite(0, 0, 'balaoT', 0)
-    this.balaoT.visible = false // Inicialmente, o balão não está visível
-    this.balaoT.setOrigin(0, 0); // Define a origem do balão no canto superior esquerdo
+    /* balão Tyler */
+
+    this.balaoT = this.add.sprite(0, 0, 'balaoT', 0);
+    this.balaoT.visible = false;
+    this.balaoT.setOrigin(0, 0);
 
     this.textoBalaoT = this.add.text(this.balaoT.x + 50, this.balaoT.y + 30, '', {
       fontSize: '18px',
       fill: '#fff',
       wordWrap: { width: 700, useAdvancedWrap: true }
-    })
+    });
 
-    // Configurar animações para o balão de fala de Tyler
     this.anims.create({
       key: 'balaoT',
       frames: this.anims.generateFrameNumbers('balaoT', { start: 0, end: 2 }),
-      frameRate: 12, // Ajuste conforme necessário
-      repeat: -1// -1 para loop
-    })
-
-    // Configurar evento para quando o texto do balão de fala de Tyler for concluído
-    this.balaoT.on('animationcomplete', () => {
-      this.balaoT.setFrame(0)// Voltar para o frame 0
-      this.balaoT.visible = false// Esconder o balão quando o texto acabar
-      this.textoBalaoT.setText(''); // Limpar o texto quando o balão desaparecer
-    })
-
-    // Evento de clique para testar o balão
-    this.input.on('pointerdown', () => {
-      exibirBalao.call(this, "olá eu sou o tyler"); // Chame a função exibirBalao com o texto desejado
+      frameRate: 12,
+      repeat: -1
     });
 
-    // ...
+    this.balaoT.on('animationcomplete', () => {
+      this.balaoT.setFrame(0);
+      this.balaoT.visible = false;
+      this.textoBalaoT.setText('');
+    });
 
-    // Função para exibir o balão
-    function exibirBalao (texto) {
-      
-      // Use a posição do jogador como referência para posicionar o balão
+    // Função para exibir o balão com parâmetros configuráveis
+    const exibirBalaoT = function (texto, tempoExibicao) {
       const jogadorX = this.personagem.x;
       const jogadorY = this.personagem.y;
 
-      // Ajuste esses valores conforme necessário para posicionar o balão de maneira adequada
-      const offsetX = -400; // ajuste conforme necessário
-      const offsetY = -250; // ajuste conforme necessário
+      const offsetX = -400;
+      const offsetY = -250;
 
-      // Posicione o balão acima e à esquerda do jogador
       this.balaoT.x = jogadorX + offsetX;
       this.balaoT.y = jogadorY + offsetY;
 
-      // Configura a posição do texto em relação ao balão
       const textoOffsetX = 130;
       const textoOffsetY = 50;
 
       this.textoBalaoT.x = this.balaoT.x + textoOffsetX;
       this.textoBalaoT.y = this.balaoT.y + textoOffsetY;
 
-      this.balaoT.setFrame(1); // Define o frame do balão para garantir que seja visível
-      this.balaoT.visible = true; // Torna o balão visível
-      this.balaoT.anims.play('balaoT', true); // Inicia a animação do balão
-      
-      this.textoBalaoT.setOrigin(0, 0); // Define a origem do texto no canto superior esquerdo
-      this.textoBalaoT.setText(texto); // Define o texto do balão
+      this.balaoT.setFrame(1);
+      this.balaoT.visible = true;
+      this.balaoT.anims.play('balaoT', true);
 
-      this.time.delayedCall(5000, () => {
-        this.balaoT.visible = false; // Esconder o balão
-        this.textoBalaoT.setText(''); // Limpar o texto
-      })
-    }
+      this.textoBalaoT.setOrigin(0, 0);
+      this.textoBalaoT.setText(texto);
+
+      this.time.delayedCall(tempoExibicao, () => {
+        this.balaoT.visible = false;
+        this.textoBalaoT.setText('');
+      });
+    };
+
+    /* como usar o balão
+        this.input.keyboard.on('keydown-F', function (event) {
+      // Chame a função exibirBalaoT com o texto desejado e o tempo de exibição
+      exibirBalaoT.call(this, "Pressionada a tecla F", 3000 -> tempo em ms);
+    }, this); */
+
+    this.input.keyboard.on('keydown-F', function (event) {
+      // Chame a função exibirBalaoT com o texto desejado e o tempo de exibição
+      exibirBalaoT.call(this, "Pressionada a tecla F", 3000);
+    }, this);
+
+    // Associe a função exibirBalaoT ao pressionar a tecla "G"
+    this.input.keyboard.on('keydown-G', function (event) {
+      // Chame a função exibirBalaoT com o texto desejado e o tempo de exibição
+      exibirBalaoT.call(this, "Pressionada a tecla G", 6000);
+    }, this);
 
     /* vilões */
     const viloesConfig = [
