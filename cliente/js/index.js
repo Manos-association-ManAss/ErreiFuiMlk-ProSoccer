@@ -2,6 +2,8 @@ import config from './config.js'
 import abertura from './abertura.js'
 import sala from './sala.js'
 import mapa1 from './mapa1.js'
+import gameOver from './gameOver.js'
+import gameWin from './gameWin.js'
 
 /* global Phaser */
 class Game extends Phaser.Game {
@@ -39,9 +41,15 @@ class Game extends Phaser.Game {
       console.log('Conectado ao servidor!')
     })
 
+    this.scoreMoeda = {
+      score: 0
+    }
+
     this.scene.add('abertura', abertura)
     this.scene.add('sala', sala)
     this.scene.add('mapa1', mapa1)
+    this.scene.add('gameOver', gameOver)
+    this.scene.add('gameWin', gameWin)
 
     this.scene.start('abertura')
   }

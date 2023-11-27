@@ -78,7 +78,7 @@ export default class mapa1 extends Phaser.Scene {
       frameHeight: 64
     })
 
-    /* botões */
+    /* genérico */
     this.load.spritesheet('direita', '../assets/direita.png', {
       frameWidth: 64,
       frameHeight: 64
@@ -94,6 +94,10 @@ export default class mapa1 extends Phaser.Scene {
     this.load.spritesheet('poder', '../assets/poder.png', {
       frameWidth: 64,
       frameHeight: 64
+    })
+    this.load.spritesheet('moeda', '../assets/money.png', {
+      frameWidth: 28,
+      frameHeight: 28
     })
 
     this.load.audio('trilha', './assets/sons/allofthelights.mp3')
@@ -118,7 +122,7 @@ export default class mapa1 extends Phaser.Scene {
     this.layerblocos = this.tilemapMapa.createLayer('blocos', [this.tilesetTile1])
     this.layerfrente = this.tilemapMapa.createLayer('frente', [this.tilesetTile1])
 
-    /* multiplayer */
+    /* multiplayer + vida de cada jogador */
     if (this.game.jogadores.primeiro === this.game.socket.id) {
       this.local = 'YE'
       this.remoto = 'tyler'
@@ -168,9 +172,23 @@ export default class mapa1 extends Phaser.Scene {
         // Colisão entre personagem e vilão
         reduzirVida(this.personagem, this.vidasSpritesheet)
 
+        this.load.shader('desaturateShader', '../js/desaturateShader.frag')
+
         // Reproduz a animação quando o jogador morrer
         if (this.personagem.vida <= 0) {
           this.vidasSpritesheet.play('perdeuVida')
+
+          //retirar a saturação das cores
+          this.cameras.main.setShader('desaturateShader')
+
+          // Define a posição do jogador morto na tela do jogador ativo
+          this.personagemRemoto.x = this.personagem.x;
+          this.personagemRemoto.y = this.personagem.y;
+        
+          this.personagemRemoto.setScrollFactor(0)
+
+          /* caso queira desativar o shader
+          this.cameras.main.removeShader() */
         }
       })
 
@@ -310,6 +328,43 @@ export default class mapa1 extends Phaser.Scene {
 
     this.anims.create({})
 
+    /* MOEDAS */
+
+    this.moeda = [
+      {
+        x: 1407,
+        y: 640
+      },
+      {
+        x: 824,
+        y: 1187
+      },
+    ]
+
+    this.anims.create({
+      key: 'moeda-girando',
+      frames: this.anims.generateFrameNumbers('moeda', {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 6,
+      repeat: -1
+    })
+
+    this.moeda.forEach((moeda) => {
+      moeda.objeto = this.physics.add.sprite(moeda.x, moeda.y, 'moeda')
+      moeda.objeto.anims.play('moeda-girando')
+      this.physics.add.collider(this.personagem, moeda.objeto, this.coletar_moeda, null, this)
+    })
+
+    this.textoMoeda = this.add.text(20, 30, `moeda: ${this.game.scoreMoeda.score}`, {
+      fontFamily: 'Silkscreen',
+      fontSize: '25px',
+      stroke: '#000000',
+      strokeThickness: 4,
+      fill: '#ffffff'
+    }).setScrollFactor(0)
+
     /* botão pra direita */
     this.direita = this.add.sprite(190, 400, 'direita', 0)
       .setScrollFactor(0)
@@ -423,10 +478,10 @@ export default class mapa1 extends Phaser.Scene {
             projeteilLocal.destroy()
           })
 
-            // Iniciar o timer após a ação
-            poderTimer = this.time.addEvent({ delay: 250, callback: () => { }, loop: false })
-          }
-        })
+          // Iniciar o timer após a ação
+          poderTimer = this.time.addEvent({ delay: 250, callback: () => { }, loop: false })
+        }
+      })
 
       .on('pointerup', () => {
         this.poder.setFrame(0)
@@ -563,8 +618,8 @@ export default class mapa1 extends Phaser.Scene {
       this.time.delayedCall(tempoExibicao, () => {
         this.balaoT.visible = false;
         this.textoBalaoT.setText('');
-      });
-    };
+      })
+    }
 
     /* como usar o balão
         this.input.keyboard.on('keydown-F', function (event) {
@@ -582,6 +637,20 @@ export default class mapa1 extends Phaser.Scene {
       // Chame a função exibirBalaoT com o texto desejado e o tempo de exibição
       exibirBalaoT.call(this, "Pressionada a tecla G", 6000);
     }, this);
+
+
+    this.game.socket.on('artefatos-notificar', (artefatos) => {
+      if (artefatos.moeda) {
+        this.game.scoreMoeda.score = 0
+        for (let i = 0; i < artefatos.moeda.length; i++) {
+          if (!artefatos.moeda[i]) {
+            this.moeda[i].objeto.disableBody(true, true)
+            this.game.scoreMoeda.score++
+          }
+          this.textoMoeda.setText(`moeda: ${this.game.scoreMoeda.score}`)
+        }
+      }
+    })
 
     /* vilões */
     const viloesConfig = [
@@ -612,6 +681,13 @@ export default class mapa1 extends Phaser.Scene {
       })
     })
 
+    this.game.socket.on('estado-notificar', ({ x, y, frame }) => {
+      this.personagemRemoto.x = x
+      this.personagemRemoto.y = y
+      this.personagemRemoto.setFrame(frame)
+    })
+
+    /* mapa */
     this.layerfundo.setCollisionByProperty({ collides: true })
     this.layeratras2.setCollisionByProperty({ collides: true })
     this.layeratras.setCollisionByProperty({ collides: true })
@@ -623,6 +699,8 @@ export default class mapa1 extends Phaser.Scene {
     this.physics.add.collider(this.personagem, this.layeratras)
     this.physics.add.collider(this.personagem, this.layeratras2)
     this.physics.add.collider(this.personagem, this.layerfundo)
+
+    /* vilões */
     this.physics.add.collider(this.personagem, this.bike)
     this.physics.add.collider(this.personagem, this.cudi)
     this.physics.add.collider(this.personagem, this.drake)
@@ -630,7 +708,37 @@ export default class mapa1 extends Phaser.Scene {
     this.physics.add.collider(this.personagem, this.pau)
     this.physics.add.collider(this.personagem, this.terra)
     this.physics.add.collider(this.personagem, this.twitter)
+
+    this.physics.add.collider(this.personagem, this.moneysGroup, this.coletar_money, null, this);
+
   }
 
-  update () { }
+  update () {   
+    // Atualize a posição do balaoT com base na posição do personagem
+    this.balaoT.x = this.personagem.x - 400;  // Ajuste conforme necessário
+    this.balaoT.y = this.personagem.y - 250;  // Ajuste conforme necessário
+
+    this.textoBalaoT.x = this.balaoT.x + 130;  // Ajuste conforme necessário
+    this.textoBalaoT.y = this.balaoT.y + 50;  // Ajuste conforme necessário 
+
+    try {
+      this.game.socket.emit('estado-publicar', this.game.sala, {
+        x: this.personagem.x,
+        y: this.personagem.y,
+        frame: this.personagem.frame.name
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  } 
+  
+ coletar_moeda(personagem, moeda) {
+      this.moedaSom.play()
+      moeda.disableBody(true, true)
+      this.game.scoreMoeda.score++
+      this.textoMoeda.setText(`moeda: ${this.game.scoreMoeda.score}`)
+      this.game.socket.emit('artefatos-publicar', this.game.sala, {
+        moeda: this.moeda.map((moeda) => moeda.objeto.visible)
+      })
+  } 
 }
