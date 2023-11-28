@@ -6,7 +6,7 @@ export default class mapa1 extends Phaser.Scene {tilemap
   preload () {
     /* mapa */
     this.load.tilemapTiledJSON('mapa', './assets/mapa/mapa.json')
-    this.load.image('Tileset', './assets/mapa/MapaTiles.png')
+    this.load.image('MapaTiles', './assets/mapa/MapaTiles.png')
 
     /* personagem */
     this.load.spritesheet('YE', './assets/YE.png', {
