@@ -18,7 +18,5 @@ export default class gameOver extends Phaser.Scene {
     })
   }
 
-  update () { 
-      
-    }
+  update () { }
 }

@@ -5,109 +5,109 @@ export default class mapa1 extends Phaser.Scene {tilemap
 
   preload () {
     /* mapa */
-    this.load.tilemapTiledJSON('mapa', '../assets/mapa/mapa.json')
-    this.load.image('Tileset', '../assets/mapa/MapaTiles.png')
+    this.load.tilemapTiledJSON('mapa', './assets/mapa/mapa.json')
+    this.load.image('Tileset', './assets/mapa/MapaTiles.png')
 
     /* personagem */
-    this.load.spritesheet('YE', '../assets/YE.png', {
+    this.load.spritesheet('YE', './assets/YE.png', {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('tyler', '../assets/tyler.png', {
+    this.load.spritesheet('tyler', './assets/tyler.png', {
       frameWidth: 47,
       frameHeight: 64
     })
-    this.load.spritesheet('YE-pulo', '../assets/YE-pulo.png', {
+    this.load.spritesheet('YE-pulo', './assets/YE-pulo.png', {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('tyler-pulo', '../assets/tyler-pulo.png', {
+    this.load.spritesheet('tyler-pulo', './assets/tyler-pulo.png', {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('tyler-poderD', '../assets/projetilT.png', {
+    this.load.spritesheet('tyler-poderD', './assets/projetilT.png', {
       frameWidth: 64,
       frameHeight: 32
     })
-    this.load.spritesheet('tyler-poderE', '../assets/projetilT2.png', {
+    this.load.spritesheet('tyler-poderE', './assets/projetilT2.png', {
       frameWidth: 64,
       frameHeight: 32
     })
-    this.load.spritesheet('ye-poderD', '../assets/projetilY.png', {
+    this.load.spritesheet('ye-poderD', './assets/projetilY.png', {
       frameWidth: 41,
       frameHeight: 32
     })
-    this.load.spritesheet('ye-poderE', '../assets/projetilY2.png', {
+    this.load.spritesheet('ye-poderE', './assets/projetilY2.png', {
       frameWidth: 41,
       frameHeight: 32
     })
-    this.load.spritesheet('vida', '../assets/vida.png', {
+    this.load.spritesheet('vida', './assets/vida.png', {
       frameWidth: 48,
       frameHeight: 48
     })
-    this.load.spritesheet('balaoT', '../assets/balaoT.png', {
+    this.load.spritesheet('balaoT', './assets/balaoT.png', {
       frameWidth: 800,
       frameHeight: 450
     })
-    this.load.spritesheet('balaoY', '../assets/balaoY.png', {
+    this.load.spritesheet('balaoY', './assets/balaoY.png', {
       frameWidth: 800,
       frameHeight: 450
     })
 
     /* vilão */
-    this.load.spritesheet('bike', '../assets/bike.png', {
+    this.load.spritesheet('bike', './assets/vilao/bike.png', {
       frameWidth: 64,
       frameHeight: 64
     })
 
-    this.load.spritesheet('cudi', '../assets/cudi.png', {
+    this.load.spritesheet('cudi', './assets/vilao/cudi.png', {
       frameWidth: 64,
       frameHeight: 64
     })
 
-    this.load.spritesheet('drake', '../assets/drake.png', {
+    this.load.spritesheet('drake', './assets/vilao/drake.png', {
       frameWidth: 64,
       frameHeight: 64
     })
 
-    this.load.spritesheet('graduation', '../assets/graduation.png', {
+    this.load.spritesheet('graduation', './assets/vilao/graduation.png', {
       frameWidth: 64,
       frameHeight: 64
     })
 
-    this.load.spritesheet('pau', '../assets/pau.png', {
+    this.load.spritesheet('pau', './assets/vilao/pau.png', {
       frameWidth: 64,
       frameHeight: 64
     })
 
-    this.load.spritesheet('terra', '../assets/terra.png', {
+    this.load.spritesheet('terra', './assets/vilao/terra.png', {
       frameWidth: 64,
       frameHeight: 64
     })
 
-    this.load.spritesheet('twitter', '../assets/twitter.png', {
+    this.load.spritesheet('twitter', './assets/vilao/twitter.png', {
       frameWidth: 64,
       frameHeight: 64
     })
 
     /* genérico */
-    this.load.spritesheet('direita', '../assets/direita.png', {
+    this.load.spritesheet('direita', './assets/direita.png', {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('esquerda', '../assets/esquerda.png', {
+    this.load.spritesheet('esquerda', './assets/esquerda.png', {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('cima', '../assets/cima.png', {
+    this.load.spritesheet('cima', './assets/cima.png', {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('poder', '../assets/poder.png', {
+    this.load.spritesheet('poder', './assets/poder.png', {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('moeda', '../assets/money.png', {
+    this.load.spritesheet('moeda', './assets/money.png', {
       frameWidth: 28,
       frameHeight: 28
     })
