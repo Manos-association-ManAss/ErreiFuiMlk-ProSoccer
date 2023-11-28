@@ -11,12 +11,12 @@ export default class mapa1 extends Phaser.Scene {
 
     /* personagem */
     this.load.spritesheet('YE', './assets/YE.png', {
-      frameWidth: 64,
-      frameHeight: 64
+      frameWidth: 47,
+      frameHeight: 58
     })
     this.load.spritesheet('tyler', './assets/tyler.png', {
       frameWidth: 47,
-      frameHeight: 64
+      frameHeight: 58
     })
     this.load.spritesheet('YE-pulo', './assets/YE-pulo.png', {
       frameWidth: 64,
@@ -104,27 +104,73 @@ export default class mapa1 extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('poder', './assets/poder.png', {
-      frameWidth: 64,
-      frameHeight: 64
+    this.load.spritesheet('poderD', './assets/poderD.png', {
+      frameWidth: 32,
+      frameHeight: 32
     })
-    this.load.spritesheet('moeda', './assets/money.png', {
+    this.load.spritesheet('poderE', './assets/poderE.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    })
+    this.load.spritesheet('money', './assets/money.png', {
+      frameWidth: 28,
+      frameHeight: 28
+    })
+    this.load.spritesheet('808', './assets/albuns/808.png', {
+      frameWidth: 28,
+      frameHeight: 28
+    })
+    this.load.spritesheet('graduation', './assets/albuns/graduation.png', {
+      frameWidth: 28,
+      frameHeight: 28
+    })
+    this.load.spritesheet('kids', './assets/albuns/kids.png', {
+      frameWidth: 28,
+      frameHeight: 28
+    })
+    this.load.spritesheet('mbdtf', './assets/albuns/mbdtf.png', {
+      frameWidth: 28,
+      frameHeight: 28
+    })
+    this.load.spritesheet('pablo', './assets/albuns/pablo.png', {
+      frameWidth: 28,
+      frameHeight: 28
+    })
+    this.load.spritesheet('watch', './assets/albuns/watch.png', {
+      frameWidth: 28,
+      frameHeight: 28
+    })
+    this.load.spritesheet('yee', './assets/albuns/yee.png', {
+      frameWidth: 28,
+      frameHeight: 28
+    })
+    this.load.spritesheet('moeda', './assets/albuns/yeezus.png', {
       frameWidth: 28,
       frameHeight: 28
     })
 
     this.load.audio('trilha', './assets/sons/allofthelights.mp3')
     this.load.audio('moedaSom', './assets/sons/moedaSom.mp3')
+    this.load.audio('gameOverSom', './assets/sons/gameOverSom.mp3')
   }
 
   create () {
+    this.timer = this.time.delayedCall(10000, this.gameOver, [], this)
+    this.timerText = this.add.text(10, 10, 'Tempo: 10', { fontSize: '32px', fill: '#fff' })
+
     this.trilha = this.sound.add('trilha')
     this.trilha.loop = true
-    this.trilha.volume = 0.5
+    this.trilha.volume = 0.2
     this.trilha.play()
     this.input.addPointer(3)
     this.moedaSom = this.sound.add('moedaSom')
-    let poderTimer
+
+    this.timer = this.time.addEvent({
+      delay: 1000, // atraso em milissegundos
+      callback: this.atualizarTempo, // função de retorno de chamada
+      callbackScope: this,
+      loop: true // repetir
+    })
 
     /* mapa */
     this.tilemapMapa = this.make.tilemap({
@@ -143,7 +189,7 @@ export default class mapa1 extends Phaser.Scene {
     if (this.game.jogadores.primeiro === this.game.socket.id) {
       this.local = 'YE'
       this.remoto = 'tyler'
-      this.personagem = this.physics.add.sprite(1000, -80, this.local, 18)
+      this.personagem = this.physics.add.sprite(2028, 2544, this.local, 18)
       this.personagem.vida = 1
       this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
       this.vidasSpritesheet.setScrollFactor(0)
@@ -155,12 +201,12 @@ export default class mapa1 extends Phaser.Scene {
         hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
       })
       this.cameras.main.startFollow(this.personagem)
-      this.personagemRemoto = this.add.sprite(1000, -80, this.remoto, 18)
+      this.personagemRemoto = this.add.sprite(2084, 2544, this.remoto, 18)
     } else if (this.game.jogadores.segundo === this.game.socket.id) {
       this.local = 'tyler'
       this.remoto = 'YE'
-      this.personagemRemoto = this.add.sprite(1000, -80, this.remoto, 18)
-      this.personagem = this.physics.add.sprite(1000, -80, this.local, 18)
+      this.personagemRemoto = this.add.sprite(2084, 2544, this.remoto, 18)
+      this.personagem = this.physics.add.sprite(2028, 2544, this.local, 18)
       this.personagem.vida = 1
       this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
       this.vidasSpritesheet.setScrollFactor(0)
@@ -307,7 +353,7 @@ export default class mapa1 extends Phaser.Scene {
       key: 'personagem-pulo',
       frames: this.anims.generateFrameNumbers(this.local, {
         start: 27,
-        end: 30
+        end: 29
       }),
       frameRate: 12,
       repeat: -1
@@ -316,8 +362,8 @@ export default class mapa1 extends Phaser.Scene {
     this.anims.create({
       key: 'personagem-pulou',
       frames: this.anims.generateFrameNumbers(this.local, {
-        start: 31,
-        end: 32
+        start: 30,
+        end: 31
       }),
       frameRate: 12,
       repeat: 1
@@ -399,7 +445,7 @@ export default class mapa1 extends Phaser.Scene {
       })
 
     /* botão pra esquerda */
-    this.esquerda = this.add.sprite(90, 397, 'esquerda', 0)
+    this.esquerda = this.add.sprite(60, 397, 'esquerda', 0)
       .setScrollFactor(0)
       .setInteractive()
       .on('pointerdown', () => {
@@ -414,7 +460,7 @@ export default class mapa1 extends Phaser.Scene {
       })
 
     /* botão pra cima */
-    this.cima = this.add.sprite(730, 397, 'cima', 0)
+    this.cima = this.add.sprite(680, 397, 'cima', 0)
       .setScrollFactor(0)
       .setInteractive()
       .on('pointerdown', () => {
@@ -434,170 +480,6 @@ export default class mapa1 extends Phaser.Scene {
           this.personagem.anims.play('personagem-pulou', true)
         }
       })
-
-    /* botão de poder pra Direita */
-    this.poder = this.add.sprite(630, 400, 'poder', 0)
-      .setScrollFactor(0)
-      .setInteractive()
-      .on('pointerdown', () => {
-        // Verificar se o timer está completo (permite ação) antes de prosseguir
-        if (!poderTimer || poderTimer.getProgress() === 1) {
-          this.poder.setFrame(1)
-          this.personagem.anims.play('personagem-poderD', true)
-          this.personagem.setVelocityX(0)
-
-          this.personagem.once('animationcomplete-personagem-poderD', () => {
-            // Ativar habilidade logo após a animação ser concluída
-            ativarHabilidade.call(this)
-
-            // Reiniciar animação do personagem para a posição parada
-            this.personagem.anims.play('personagem-paradoD')
-          })
-
-          // Iniciar o timer após a ação
-          poderTimer = this.time.addEvent({ delay: 250, callback: () => { }, loop: false })
-        }
-      })
-
-      .on('pointerup', () => {
-        this.poder.setFrame(0)
-        if (this.personagem.anims.currentAnim.key !== 'personagem-poderD') {
-          this.personagem.anims.play('personagem-paradoD')
-          this.personagem.setVelocityX(0)
-        }
-      })
-
-    function ativarHabilidade () {
-      // Criar um projétil
-      let projeteilSpritesheetKey
-      if (this.local === 'YE') {
-        projeteilSpritesheetKey = 'ye-poderD'
-      } else if (this.local === 'tyler') {
-        projeteilSpritesheetKey = 'tyler-poderD'
-      }
-
-      // Corrigir a posição inicial do projétil para evitar sobreposição com o personagem
-      const projeteilLocal = this.physics.add.sprite(this.personagem.x, this.personagem.y + 5, projeteilSpritesheetKey)
-      projeteilLocal.setVelocityX(800) // Mudar para 800 para ir para a direita
-
-      // Configurar animação para tocar os frames de 0 a 6 em loop
-      projeteilLocal.anims.create({
-        key: 'projeteilLoop',
-        frames: this.anims.generateFrameNumbers(projeteilSpritesheetKey, { start: 0, end: 6 }),
-        frameRate: 10,
-        repeat: -1 // Repetir indefinidamente
-      })
-
-      // Configurar animação para tocar os frames de 6 a 10 quando colidir com layerfundo
-      projeteilLocal.anims.create({
-        key: 'projeteilCollision',
-        frames: this.anims.generateFrameNumbers(projeteilSpritesheetKey, { start: 6, end: 10 }),
-        frameRate: 10,
-        repeat: 0 // Repetir uma vez
-      })
-
-      // Restante do código relacionado ao projétil (colisões, gravidade, remoção, etc.)
-
-      projeteilLocal.anims.play('projeteilLoop')
-
-      // Configurar colisão do projétil com o layerfundo
-      this.physics.add.collider(projeteilLocal, this.layerfundo, () => {
-        projeteilLocal.anims.play('projeteilCollision')
-        projeteilLocal.once('animationcomplete', () => {
-          projeteilLocal.destroy()
-        })
-      })
-
-      // Configurar a gravidade apenas enquanto o projétil estiver visível
-      projeteilLocal.body.setAllowGravity(false)
-
-      // Remover o projétil da simulação de física quando não estiver mais visível
-      projeteilLocal.on('animationcomplete', () => {
-        projeteilLocal.destroy()
-      })
-    }
-
-    /* botão de poder pra Esquerda */
-    this.poderE = this.add.sprite(530, 400, 'poder', 0)
-      .setScrollFactor(0)
-      .setInteractive()
-      .on('pointerdown', () => {
-        // Verificar se o timer está completo (permite ação) antes de prosseguir
-        if (!poderTimer || poderTimer.getProgress() === 1) {
-          this.poderE.setFrame(1)
-          this.personagem.anims.play('personagem-poderE', true)
-          this.personagem.setVelocityX(0)
-
-          this.personagem.once('animationcomplete-personagem-poderE', () => {
-            // Ativar habilidade logo após a animação ser concluída
-            ativarHabilidadeEsquerda.call(this)
-
-            // Reiniciar animação do personagem para a posição parada
-            this.personagem.anims.play('personagem-paradoE')
-          })
-
-          // Iniciar o timer após a ação
-          poderTimer = this.time.addEvent({ delay: 250, callback: () => { }, loop: false })
-        }
-      })
-
-      .on('pointerup', () => {
-        this.poderE.setFrame(0)
-        if (this.personagem.anims.currentAnim.key !== 'personagem-poderE') {
-          this.personagem.anims.play('personagem-paradoE')
-          this.personagem.setVelocityX(0)
-        }
-      })
-
-    function ativarHabilidadeEsquerda () {
-      // Criar um projétil
-      let projeteilSpritesheetKey
-      if (this.local === 'YE') {
-        projeteilSpritesheetKey = 'ye-poderE'
-      } else if (this.local === 'tyler') {
-        projeteilSpritesheetKey = 'tyler-poderE'
-      }
-
-      // Corrigir a posição inicial do projétil para evitar sobreposição com o personagem
-      const projeteilLocal = this.physics.add.sprite(this.personagem.x, this.personagem.y + 5, projeteilSpritesheetKey)
-      projeteilLocal.setVelocityX(-800) // Mudar para -800 para ir para a esquerda
-
-      // Configurar animação para tocar os frames de 0 a 6 em loop
-      projeteilLocal.anims.create({
-        key: 'projeteilLoop',
-        frames: this.anims.generateFrameNumbers(projeteilSpritesheetKey, { start: 0, end: 6 }),
-        frameRate: 10,
-        repeat: -1 // Repetir indefinidamente
-      })
-
-      // Configurar animação para tocar os frames de 6 a 10 quando colidir com layerfundo
-      projeteilLocal.anims.create({
-        key: 'projeteilCollision',
-        frames: this.anims.generateFrameNumbers(projeteilSpritesheetKey, { start: 6, end: 10 }),
-        frameRate: 10,
-        repeat: 0 // Repetir uma vez
-      })
-
-      // Restante do código relacionado ao projétil (colisões, gravidade, remoção, etc.)
-
-      projeteilLocal.anims.play('projeteilLoop')
-
-      // Configurar colisão do projétil com o layerfundo
-      this.physics.add.collider(projeteilLocal, this.layerfundo, () => {
-        projeteilLocal.anims.play('projeteilCollision')
-        projeteilLocal.once('animationcomplete', () => {
-          projeteilLocal.destroy()
-        })
-      })
-
-      // Configurar a gravidade apenas enquanto o projétil estiver visível
-      projeteilLocal.body.setAllowGravity(false)
-
-      // Remover o projétil da simulação de física quando não estiver mais visível
-      projeteilLocal.on('animationcomplete', () => {
-        projeteilLocal.destroy()
-      })
-    }
 
     /* balões */
     /* balão Tyler */
@@ -786,13 +668,13 @@ export default class mapa1 extends Phaser.Scene {
     this.layeratras2.setCollisionByProperty({ collides: true })
     this.layeratras.setCollisionByProperty({ collides: true })
     this.layerblocos.setCollisionByProperty({ collides: true })
-    this.layerfrente.setCollisionByProperty({ collides: true })
+    this.layerfundo.setCollisionByProperty({ collides: true })
 
-    this.physics.add.collider(this.personagem, this.layerfrente)
+    // this.physics.add.collider(this.personagem, this.layerfrente)
     this.physics.add.collider(this.personagem, this.layerblocos)
-    this.physics.add.collider(this.personagem, this.layeratras)
-    this.physics.add.collider(this.personagem, this.layeratras2)
-    this.physics.add.collider(this.personagem, this.layerfundo)
+    // this.physics.add.collider(this.personagem, this.layeratras)
+    // this.physics.add.collider(this.personagem, this.layeratras2)
+    // this.physics.add.collider(this.personagem, this.layerfundo)
 
     /* vilões */
     this.physics.add.collider(this.personagem, this.bike)
@@ -830,6 +712,8 @@ export default class mapa1 extends Phaser.Scene {
     } catch (error) {
       console.error(error)
     }
+
+    this.timerText.setText('Tempo: ' + (this.timer.delay - this.timer.elapsed) / 1000)
   }
 
   coletar_moeda (personagem, moeda) {
@@ -840,5 +724,14 @@ export default class mapa1 extends Phaser.Scene {
     this.game.socket.emit('artefatos-publicar', this.game.sala, {
       moeda: this.moeda.map((moeda) => moeda.objeto.visible)
     })
+  }
+
+  gameOver () {
+    this.trilha.stop()
+    this.gameOverSom = this.sound.add('gameOverSom')
+    this.gameOverSom.play()
+    this.gameOverSom.loop = true
+    this.game.scene.stop('mapa1')
+    this.game.scene.start('gameOver')
   }
 }
