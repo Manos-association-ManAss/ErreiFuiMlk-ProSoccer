@@ -122,6 +122,7 @@ export default class mapa1 extends Phaser.Scene {
     this.trilha.loop = true
     this.trilha.volume = 0.5
     this.trilha.play()
+    this.input.addPointer(3)
     this.moedaSom = this.sound.add('moedaSom')
     let poderTimer
 
