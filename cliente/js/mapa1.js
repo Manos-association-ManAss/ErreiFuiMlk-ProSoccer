@@ -26,25 +26,9 @@ export default class mapa1 extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64
     })
-    this.load.spritesheet('tyler-poderD', './assets/projetilT.png', {
-      frameWidth: 64,
-      frameHeight: 32
-    })
-    this.load.spritesheet('tyler-poderE', './assets/projetilT2.png', {
-      frameWidth: 64,
-      frameHeight: 32
-    })
-    this.load.spritesheet('ye-poderD', './assets/projetilY.png', {
-      frameWidth: 41,
-      frameHeight: 32
-    })
-    this.load.spritesheet('ye-poderE', './assets/projetilY2.png', {
-      frameWidth: 41,
-      frameHeight: 32
-    })
     this.load.spritesheet('vida', './assets/vida.png', {
-      frameWidth: 48,
-      frameHeight: 48
+      frameWidth: 28,
+      frameHeight: 28
     })
     this.load.spritesheet('balaoT', './assets/balaoT.png', {
       frameWidth: 800,
@@ -67,14 +51,6 @@ export default class mapa1 extends Phaser.Scene {
     this.load.spritesheet('cima', './assets/cima.png', {
       frameWidth: 64,
       frameHeight: 64
-    })
-    this.load.spritesheet('poderD', './assets/poderD.png', {
-      frameWidth: 32,
-      frameHeight: 32
-    })
-    this.load.spritesheet('poderE', './assets/poderE.png', {
-      frameWidth: 32,
-      frameHeight: 32
     })
     this.load.spritesheet('money', './assets/money.png', {
       frameWidth: 28,
@@ -121,7 +97,7 @@ export default class mapa1 extends Phaser.Scene {
   create () {
     this.trilha = this.sound.add('trilha')
     this.trilha.loop = true
-    this.trilha.volume = 0.1
+    this.trilha.volume = 0.2
     this.trilha.play()
     this.input.addPointer(3)
     this.moedaSom = this.sound.add('moedaSom')
@@ -144,58 +120,13 @@ export default class mapa1 extends Phaser.Scene {
     if (this.game.jogadores.primeiro === this.game.socket.id) {
       this.local = 'YE'
       this.remoto = 'tyler'
-      this.personagem = this.physics.add.sprite(2100, 444, this.local, 18)
-      this.personagem.vida = 1
-      this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
-      this.vidasSpritesheet.setScrollFactor(0)
-      this.anims.create({
-        key: 'perdeuVida',
-        frames: this.anims.generateFrameNumbers('vidasSpritesheetKey', { start: 1, end: 4 }),
-        frameRate: 10, // Ajuste a velocidade da animação conforme necessário
-        repeat: 0, // Não repete a animação
-        hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
-      })
-      this.cameras.main.startFollow(this.personagem)
+      this.personagem = this.physics.add.sprite(2100, 444, this.local, 18) // 2100,444
       this.personagemRemoto = this.add.sprite(2100, 444, this.remoto, 18)
     } else if (this.game.jogadores.segundo === this.game.socket.id) {
       this.local = 'tyler'
       this.remoto = 'YE'
       this.personagemRemoto = this.add.sprite(2100, 444, this.remoto, 18)
       this.personagem = this.physics.add.sprite(2100, 444, this.local, 18)
-      this.personagem.vida = 1
-      this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
-      this.vidasSpritesheet.setScrollFactor(0)
-      this.anims.create({
-        key: 'perdeuVida',
-        frames: this.anims.generateFrameNumbers('vidasSpritesheetKey', { start: 1, end: 4 }),
-        frameRate: 10, // Ajuste a velocidade da animação conforme necessário
-        repeat: 0, // Não repete a animação
-        hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
-      })
-      this.cameras.main.startFollow(this.personagem)
-      this.physics.add.collider(this.personagem, this.layerdano, () => {
-        // Colisão entre personagem e vilão
-        // this.reduzirVida()
-
-        // this.load.shader('desaturateShader', '../js/desaturateShader.frag')
-
-        // Reproduz a animação quando o jogador morrer
-        if (this.personagem.vida <= 0) {
-          this.vidasSpritesheet.play('perdeuVida')
-
-          // retirar a saturação das cores
-          this.cameras.main.setShader('desaturateShader')
-
-          // Define a posição do jogador morto na tela do jogador ativo
-          this.personagemRemoto.x = this.personagem.x
-          this.personagemRemoto.y = this.personagem.y
-
-          this.personagemRemoto.setScrollFactor(0)
-
-          /* caso queira desativar o shader
-          this.cameras.main.removeShader() */
-        }
-      })
 
       navigator.mediaDevices.getUserMedia({ video: false, audio: true })
         .then((stream) => {
@@ -509,88 +440,132 @@ export default class mapa1 extends Phaser.Scene {
         y: 2627
       },
       {
-        x: 5100.5, // moeda 44 **
+        x: 5100.5, // moeda 44
         y: 2467
       },
       {
-        x: 7752.5, // moeda 45
-        y: 835
+        x: 4831.375, // moeda 45
+        y: 2275
       },
       {
-        x: 7752.5, // moeda 46
-        y: 835
+        x: 4101.375, // moeda 46
+        y: 2083
       },
       {
-        x: 7752.5, // moeda 47
-        y: 835
+        x: 3741.375, // moeda 47
+        y: 2083
       },
       {
-        x: 7752.5, // moeda 48
-        y: 835
+        x: 3261.375, // moeda 48
+        y: 2019
       },
       {
-        x: 7752.5, // moeda 49
-        y: 835
+        x: 4136.5, // moeda 49
+        y: 2819
       },
       {
-        x: 7752.5, // moeda 50
-        y: 835
+        x: 4036.5, // moeda 50
+        y: 2819
       },
       {
-        x: 7752.5, // moeda 51
-        y: 835
+        x: 3936.5, // moeda 51
+        y: 2819
       },
       {
-        x: 7752.5, // moeda 52
-        y: 835
+        x: 3836.5, // moeda 52
+        y: 2819
       },
       {
-        x: 7752.5, // moeda 53
-        y: 835
+        x: 3736.5, // moeda 53
+        y: 2819
       },
       {
-        x: 7752.5, // moeda 54
-        y: 835
+        x: 3146.5, // moeda 54
+        y: 2819
       },
       {
-        x: 7752.5, // moeda 55
-        y: 835
+        x: 2459.5, // moeda 55
+        y: 2659
       },
       {
-        x: 7752.5, // moeda 56
-        y: 835
+        x: 2291.5, // moeda 56
+        y: 2531
       },
       {
-        x: 7752.5, // moeda 57
-        y: 835
+        x: 2506.5, // moeda 57
+        y: 2243
       },
       {
-        x: 7752.5, // moeda 58
-        y: 835
+        x: 1719.5, // moeda 58
+        y: 2147
       },
       {
-        x: 7752.5, // moeda 59
-        y: 835
+        x: 1948.5, // moeda 59
+        y: 3779
       },
       {
-        x: 7752.5, // moeda 60
-        y: 835
+        x: 2563.5, // moeda 60
+        y: 3779
       },
       {
-        x: 7752.5, // moeda 61
-        y: 835
+        x: 3143.5, // moeda 61
+        y: 3715
       },
       {
-        x: 7752.5, // moeda 62
-        y: 835
+        x: 3753.5, // moeda 62
+        y: 3715
       },
       {
-        x: 7752.5, // moeda 63
-        y: 835
+        x: 4293.5, // moeda 63
+        y: 3715
       },
       {
-        x: 7752.5, // moeda 64
-        y: 835
+        x: 4688.5, // moeda 64
+        y: 3715
+      },
+      {
+        x: 5134.5, // moeda 65
+        y: 3939
+      },
+      {
+        x: 5256.5, // moeda 66
+        y: 3939
+      },
+      {
+        x: 5182.5, // moeda 67
+        y: 3715
+      },
+      {
+        x: 5751.5, // moeda 68
+        y: 3747
+      },
+      {
+        x: 6216.5, // moeda 69
+        y: 3459
+      },
+      {
+        x: 6851.5, // moeda 70
+        y: 3683
+      },
+      {
+        x: 7686.5, // moeda 71
+        y: 3683
+      },
+      {
+        x: 7931.5, // moeda 72
+        y: 3523
+      },
+      {
+        x: 8776.5, // moeda 73
+        y: 3843
+      },
+      {
+        x: 8936.5, // moeda 74
+        y: 3683
+      },
+      {
+        x: 9476.5, // moeda 75
+        y: 3683
       }
     ]
 
@@ -657,7 +632,7 @@ export default class mapa1 extends Phaser.Scene {
         this.cima.setFrame(1)
         if (this.personagem.body.blocked.down) {
           this.personagem.anims.play('personagem-pulo', true)
-          this.personagem.setVelocityY(-600)
+          this.personagem.setVelocityY(-645)
         }
       })
       .on('pointerup', () => {
@@ -802,7 +777,7 @@ export default class mapa1 extends Phaser.Scene {
     // Associe a função exibirBalaoT ao pressionar a tecla "G"
     this.input.keyboard.on('keydown-H', function (event) {
       // Chame a função exibirBalaoT com o texto desejado e o tempo de exibição
-      exibirBalaoY.call(this.balaoT, 'Pressionada a tecla H', 6000)
+      exibirBalaoY.call(this, 'Pressionada a tecla H', 6000)
     }, this)
 
     this.game.socket.on('artefatos-notificar', (artefatos) => {
@@ -825,21 +800,45 @@ export default class mapa1 extends Phaser.Scene {
     })
 
     /* mapa */
-    this.layerfrente.setCollisionByProperty({ collides: true })
-    this.layerdano.setCollisionByProperty({ collides: true })
+    this.layerfundo.setCollisionByProperty({ collides: true })
     this.layeratras2.setCollisionByProperty({ collides: true })
     this.layeratras.setCollisionByProperty({ collides: true })
     this.layerblocos.setCollisionByProperty({ collides: true })
-    this.layerfundo.setCollisionByProperty({ collides: true })
+    this.layerdano.setCollisionByProperty({ collides: true })
+    this.layerfrente.setCollisionByProperty({ collides: true })
 
-    // this.physics.add.collider(this.personagem, this.layerfrente)
+    // this.physics.add.collider(this.personagem, this.layerfundo)
+    // this.physics.add.collider(this.personagem, this.layeratras2)
+    // this.physics.add.collider(this.personagem, this.layeratras)
     this.physics.add.collider(this.personagem, this.layerblocos)
     this.physics.add.collider(this.personagem, this.layerdano)
-    // this.physics.add.collider(this.personagem, this.layeratras)
-    // this.physics.add.collider(this.personagem, this.layeratras2)
-    // this.physics.add.collider(this.personagem, this.layerfundo)
+    // this.physics.add.collider(this.personagem, this.layerfrente)
 
     this.physics.add.collider(this.personagem, this.moneysGroup, this.coletar_money, null, this)
+
+    this.personagem.vida = 1
+    this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
+    this.vidasSpritesheet.setScrollFactor(0)
+
+    this.anims.create({
+      key: 'perdeuVida',
+      frames: this.anims.generateFrameNumbers('vidasSpritesheetKey', { start: 1, end: 4 }),
+      frameRate: 10, // Ajuste a velocidade da animação conforme necessário
+      repeat: 0, // Não repete a animação
+      hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
+    })
+
+    this.physics.add.collider(this.personagem, this.layerdano, () => {
+      this.personagem.vida--
+
+      if (this.personagem.vida <= 0) {
+        this.vidasSpritesheet.play('perdeuVida')
+        this.load.shader('desaturateShader', '../js/desaturateShader.frag')
+        this.cameras.main.setShader('desaturateShader')
+        this.game.scene.stop('mapa1')
+        this.game.scene.start('gameOver')
+      }
+    })
 
     this.timerText = this.add.text(20, -5, 'Hora', {
       fontFamily: 'Silkscreen',
@@ -897,20 +896,6 @@ export default class mapa1 extends Phaser.Scene {
     this.game.scene.start('gameOver')
   }
 
-  reduzirVida () {
-    this.personagem.vida--
-
-    if (this.personagem.vida <= 0) {
-      // A vida é zero ou menos, execute a lógica do game over aqui
-      // Por exemplo, você pode redirecionar para a cena 'gameOver'
-      this.game.scene.stop('mapa1')
-      this.game.scene.start('gameOver')
-    } else {
-      // Ainda há vida, você pode realizar outras ações aqui
-      console.log(`Vida restante: ${this.personagem.vida}`)
-    }
-  }
-
   FimdeJogo () {
     this.tempo = 2
     this.relogio = this.time.addEvent({
@@ -921,7 +906,7 @@ export default class mapa1 extends Phaser.Scene {
           this.relogio.destroy()
 
           // Verificar se o número de moedas é <= 60
-          if (this.game.scoreMoeda.score <= 1) {
+          if (this.game.scoreMoeda.score <= 60) {
             // Moedas <= 60, iniciar a cena 'gameOver'
             this.scene.stop('mapa1')
             this.scene.start('gameOver')
