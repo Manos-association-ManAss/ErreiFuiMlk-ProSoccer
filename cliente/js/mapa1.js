@@ -55,42 +55,6 @@ export default class mapa1 extends Phaser.Scene {
       frameHeight: 450
     })
 
-    /* vilão */
-    this.load.spritesheet('bike', './assets/vilao/bike.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-
-    this.load.spritesheet('cudi', './assets/vilao/cudi.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-
-    this.load.spritesheet('drake', './assets/vilao/drake.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-
-    this.load.spritesheet('graduation', './assets/vilao/graduation.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-
-    this.load.spritesheet('pau', './assets/vilao/pau.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-
-    this.load.spritesheet('terra', './assets/vilao/terra.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-
-    this.load.spritesheet('twitter', './assets/vilao/twitter.png', {
-      frameWidth: 64,
-      frameHeight: 64
-    })
-
     /* genérico */
     this.load.spritesheet('direita', './assets/direita.png', {
       frameWidth: 64,
@@ -145,8 +109,8 @@ export default class mapa1 extends Phaser.Scene {
       frameHeight: 28
     })
     this.load.spritesheet('moeda', './assets/albuns/yeezus.png', {
-      frameWidth: 28,
-      frameHeight: 28
+      frameWidth: 48,
+      frameHeight: 48
     })
 
     this.load.audio('trilha', './assets/sons/allofthelights.mp3')
@@ -155,22 +119,12 @@ export default class mapa1 extends Phaser.Scene {
   }
 
   create () {
-    this.timer = this.time.delayedCall(10000, this.gameOver, [], this)
-    this.timerText = this.add.text(10, 10, 'Tempo: 10', { fontSize: '32px', fill: '#fff' })
-
     this.trilha = this.sound.add('trilha')
     this.trilha.loop = true
-    this.trilha.volume = 0.2
+    this.trilha.volume = 0.1
     this.trilha.play()
     this.input.addPointer(3)
     this.moedaSom = this.sound.add('moedaSom')
-
-    this.timer = this.time.addEvent({
-      delay: 1000, // atraso em milissegundos
-      callback: this.atualizarTempo, // função de retorno de chamada
-      callbackScope: this,
-      loop: true // repetir
-    })
 
     /* mapa */
     this.tilemapMapa = this.make.tilemap({
@@ -183,19 +137,65 @@ export default class mapa1 extends Phaser.Scene {
     this.layeratras2 = this.tilemapMapa.createLayer('atras2', [this.tilesetTile1])
     this.layeratras = this.tilemapMapa.createLayer('atras', [this.tilesetTile1])
     this.layerblocos = this.tilemapMapa.createLayer('blocos', [this.tilesetTile1])
+    this.layerdano = this.tilemapMapa.createLayer('dano', [this.tilesetTile1])
     this.layerfrente = this.tilemapMapa.createLayer('frente', [this.tilesetTile1])
 
     /* multiplayer + vida de cada jogador */
     if (this.game.jogadores.primeiro === this.game.socket.id) {
       this.local = 'YE'
       this.remoto = 'tyler'
-      this.personagem = this.physics.add.sprite(2028, 2544, this.local, 18)
-      this.personagemRemoto = this.add.sprite(2084, 2544, this.remoto, 18)
+      this.personagem = this.physics.add.sprite(2100, 444, this.local, 18)
+      this.personagem.vida = 1
+      this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
+      this.vidasSpritesheet.setScrollFactor(0)
+      this.anims.create({
+        key: 'perdeuVida',
+        frames: this.anims.generateFrameNumbers('vidasSpritesheetKey', { start: 1, end: 4 }),
+        frameRate: 10, // Ajuste a velocidade da animação conforme necessário
+        repeat: 0, // Não repete a animação
+        hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
+      })
+      this.cameras.main.startFollow(this.personagem)
+      this.personagemRemoto = this.add.sprite(2100, 444, this.remoto, 18)
     } else if (this.game.jogadores.segundo === this.game.socket.id) {
       this.local = 'tyler'
       this.remoto = 'YE'
-      this.personagemRemoto = this.add.sprite(2084, 2544, this.remoto, 18)
-      this.personagem = this.physics.add.sprite(2028, 2544, this.local, 18)
+      this.personagemRemoto = this.add.sprite(2100, 444, this.remoto, 18)
+      this.personagem = this.physics.add.sprite(2100, 444, this.local, 18)
+      this.personagem.vida = 1
+      this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
+      this.vidasSpritesheet.setScrollFactor(0)
+      this.anims.create({
+        key: 'perdeuVida',
+        frames: this.anims.generateFrameNumbers('vidasSpritesheetKey', { start: 1, end: 4 }),
+        frameRate: 10, // Ajuste a velocidade da animação conforme necessário
+        repeat: 0, // Não repete a animação
+        hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
+      })
+      this.cameras.main.startFollow(this.personagem)
+      this.physics.add.collider(this.personagem, this.layerdano, () => {
+        // Colisão entre personagem e vilão
+        // this.reduzirVida()
+
+        // this.load.shader('desaturateShader', '../js/desaturateShader.frag')
+
+        // Reproduz a animação quando o jogador morrer
+        if (this.personagem.vida <= 0) {
+          this.vidasSpritesheet.play('perdeuVida')
+
+          // retirar a saturação das cores
+          this.cameras.main.setShader('desaturateShader')
+
+          // Define a posição do jogador morto na tela do jogador ativo
+          this.personagemRemoto.x = this.personagem.x
+          this.personagemRemoto.y = this.personagem.y
+
+          this.personagemRemoto.setScrollFactor(0)
+
+          /* caso queira desativar o shader
+          this.cameras.main.removeShader() */
+        }
+      })
 
       navigator.mediaDevices.getUserMedia({ video: false, audio: true })
         .then((stream) => {
@@ -337,12 +337,260 @@ export default class mapa1 extends Phaser.Scene {
 
     this.moeda = [
       {
-        x: 900,
-        y: -60
+        x: 2485, // moeda 1
+        y: 515
       },
       {
-        x: 950,
-        y: -60
+        x: 2610, // moeda 2
+        y: 451
+      },
+      {
+        x: 2755, // moeda 3
+        y: 451
+      },
+      {
+        x: 2485, // moeda 4
+        y: 611
+      },
+      {
+        x: 2880, // moeda 5
+        y: 611
+      },
+      {
+        x: 3190, // moeda 6
+        y: 515
+      },
+      {
+        x: 4101, // moeda 7
+        y: 900
+      },
+      {
+        x: 3731.5, // moeda 8
+        y: 1219
+      },
+      {
+        x: 4077.5, // moeda 9
+        y: 1219
+      },
+      {
+        x: 3579.5, // moeda 10
+        y: 444
+      },
+      {
+        x: 3246.5, // moeda 11
+        y: 1096.77
+      },
+      {
+        x: 2816, // moeda 12
+        y: 1219
+      },
+      {
+        x: 2586, // moeda 13
+        y: 1219
+      },
+      {
+        x: 2300, // moeda 14
+        y: 1096
+      },
+      {
+        x: 1815.5, // moeda 15
+        y: 1219
+      },
+      {
+        x: 1838.5, // moeda 16
+        y: 1091
+      },
+      {
+        x: 2008.5, // moeda 17
+        y: 963
+      },
+      {
+        x: 2118.5, // moeda 18
+        y: 739
+      },
+      {
+        x: 2858.5, // moeda 19
+        y: 739
+      },
+      {
+        x: 4531.5, // moeda 20
+        y: 1155
+      },
+      {
+        x: 4279.5, // moeda 21
+        y: 931
+      },
+      {
+        x: 4279.5, // moeda 22
+        y: 675
+      },
+      {
+        x: 4749.5, // moeda 23
+        y: 1283
+      },
+      {
+        x: 5154.5, // moeda 24
+        y: 1123
+      },
+      {
+        x: 6016.5, // moeda 25
+        y: 1123
+      },
+      {
+        x: 6103.5, // moeda 26
+        y: 1187
+      },
+      {
+        x: 6335.5, // moeda 27
+        y: 963
+      },
+      {
+        x: 6760.5, // moeda 28
+        y: 963
+      },
+      {
+        x: 6580.5, // moeda 29
+        y: 835
+      },
+      {
+        x: 6835.5, // moeda 30
+        y: 739
+      },
+      {
+        x: 7020.5, // moeda 31
+        y: 611
+      },
+      {
+        x: 7222.5, // moeda 32
+        y: 483
+      },
+      {
+        x: 7512.5, // moeda 33
+        y: 355
+      },
+      {
+        x: 7752.5, // moeda 34
+        y: 835
+      },
+      {
+        x: 7138.5, // moeda 35
+        y: 2627
+      },
+      {
+        x: 6549.5, // moeda 36
+        y: 2563
+      },
+      {
+        x: 6214.5, // moeda 37
+        y: 2339
+      },
+      {
+        x: 6044.5, // moeda 38
+        y: 2243
+      },
+      {
+        x: 5724.5, // moeda 39
+        y: 2179
+      },
+      {
+        x: 5992.5, // moeda 40
+        y: 2467
+      },
+      {
+        x: 5563.5, // moeda 41
+        y: 2595
+      },
+      {
+        x: 5283.5, // moeda 42
+        y: 2627
+      },
+      {
+        x: 4483.5, // moeda 43
+        y: 2627
+      },
+      {
+        x: 5100.5, // moeda 44 **
+        y: 2467
+      },
+      {
+        x: 7752.5, // moeda 45
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 46
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 47
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 48
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 49
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 50
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 51
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 52
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 53
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 54
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 55
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 56
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 57
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 58
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 59
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 60
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 61
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 62
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 63
+        y: 835
+      },
+      {
+        x: 7752.5, // moeda 64
+        y: 835
       }
     ]
 
@@ -363,7 +611,7 @@ export default class mapa1 extends Phaser.Scene {
       this.physics.add.collider(this.personagem, moeda.objeto, this.coletar_moeda, null, this)
     })
 
-    this.textoMoeda = this.add.text(20, 150, `moedas: ${this.game.scoreMoeda.score}`, {
+    this.textoMoeda = this.add.text(20, 150, `albuns: ${this.game.scoreMoeda.score}`, {
       fontFamily: 'Silkscreen',
       fontSize: '25px',
       stroke: '#000000',
@@ -378,7 +626,7 @@ export default class mapa1 extends Phaser.Scene {
       .on('pointerdown', () => {
         this.direita.setFrame(1)
         this.personagem.anims.play('personagem-direita', true)
-        this.personagem.setVelocityX(200)
+        this.personagem.setVelocityX(300)
       })
       .on('pointerup', () => {
         this.direita.setFrame(0)
@@ -393,7 +641,7 @@ export default class mapa1 extends Phaser.Scene {
       .on('pointerdown', () => {
         this.esquerda.setFrame(1)
         this.personagem.anims.play('personagem-esquerda', true)
-        this.personagem.setVelocityX(-200)
+        this.personagem.setVelocityX(-300)
       })
       .on('pointerup', () => {
         this.esquerda.setFrame(0)
@@ -409,7 +657,7 @@ export default class mapa1 extends Phaser.Scene {
         this.cima.setFrame(1)
         if (this.personagem.body.blocked.down) {
           this.personagem.anims.play('personagem-pulo', true)
-          this.personagem.setVelocityY(-500)
+          this.personagem.setVelocityY(-600)
         }
       })
       .on('pointerup', () => {
@@ -554,7 +802,7 @@ export default class mapa1 extends Phaser.Scene {
     // Associe a função exibirBalaoT ao pressionar a tecla "G"
     this.input.keyboard.on('keydown-H', function (event) {
       // Chame a função exibirBalaoT com o texto desejado e o tempo de exibição
-      exibirBalaoY.call(this, 'Pressionada a tecla H', 6000)
+      exibirBalaoY.call(this.balaoT, 'Pressionada a tecla H', 6000)
     }, this)
 
     this.game.socket.on('artefatos-notificar', (artefatos) => {
@@ -565,38 +813,9 @@ export default class mapa1 extends Phaser.Scene {
             this.moeda[i].objeto.disableBody(true, true)
             this.game.scoreMoeda.score++
           }
-          this.textoMoeda.setText(`moeda: ${this.game.scoreMoeda.score}`)
+          this.textoMoeda.setText(`albuns: ${this.game.scoreMoeda.score}`)
         }
       }
-    })
-
-    /* vilões */
-    const viloesConfig = [
-      { key: 'bike', x: 200, y: 500, moveDistance: 100, moveDuration: 2000 },
-      { key: 'cudi', x: 400, y: 500, moveDistance: 150, moveDuration: 3000 },
-      { key: 'drake', x: 600, y: 500, moveDistance: 120, moveDuration: 2500 },
-      { key: 'graduation', x: 600, y: 500, moveDistance: 120, moveDuration: 2500 },
-      { key: 'pau', x: 600, y: 500, moveDistance: 120, moveDuration: 2500 },
-      { key: 'terra', x: 600, y: 500, moveDistance: 120, moveDuration: 2500 },
-      { key: 'twitter', x: 600, y: 500, moveDistance: 120, moveDuration: 2500 }
-    ]
-
-    viloesConfig.forEach(({ key, x, y, moveDistance, moveDuration }) => {
-      const vilao = this.physics.add.sprite(x, y, key)
-      this.physics.world.enable(vilao)
-
-      // Configurando colisão com o layerfundo e o vilao
-      this.physics.add.collider([this.layerfundo, vilao])
-
-      // Adicionando movimento automático para o vilao
-      this.tweens.add({
-        targets: vilao,
-        x: vilao.x + moveDistance,
-        duration: moveDuration,
-        ease: 'Linear',
-        yoyo: true,
-        repeat: -1
-      })
     })
 
     this.game.socket.on('estado-notificar', ({ x, y, frame }) => {
@@ -606,7 +825,8 @@ export default class mapa1 extends Phaser.Scene {
     })
 
     /* mapa */
-    this.layerfundo.setCollisionByProperty({ collides: true })
+    this.layerfrente.setCollisionByProperty({ collides: true })
+    this.layerdano.setCollisionByProperty({ collides: true })
     this.layeratras2.setCollisionByProperty({ collides: true })
     this.layeratras.setCollisionByProperty({ collides: true })
     this.layerblocos.setCollisionByProperty({ collides: true })
@@ -614,47 +834,25 @@ export default class mapa1 extends Phaser.Scene {
 
     // this.physics.add.collider(this.personagem, this.layerfrente)
     this.physics.add.collider(this.personagem, this.layerblocos)
+    this.physics.add.collider(this.personagem, this.layerdano)
     // this.physics.add.collider(this.personagem, this.layeratras)
     // this.physics.add.collider(this.personagem, this.layeratras2)
     // this.physics.add.collider(this.personagem, this.layerfundo)
 
-    /* vilões */
-    this.physics.add.collider(this.personagem, this.bike)
-    this.physics.add.collider(this.personagem, this.cudi)
-    this.physics.add.collider(this.personagem, this.drake)
-    this.physics.add.collider(this.personagem, this.graduation)
-    this.physics.add.collider(this.personagem, this.pau)
-    this.physics.add.collider(this.personagem, this.terra)
-    this.physics.add.collider(this.personagem, this.twitter)
-
     this.physics.add.collider(this.personagem, this.moneysGroup, this.coletar_money, null, this)
 
-    this.personagem.vida = 1
-    this.vidasSpritesheet = this.add.sprite(400, 397, 'vida', 0)
-    this.vidasSpritesheet.setScrollFactor(0)
-
-    this.anims.create({
-      key: 'perdeuVida',
-      frames: this.anims.generateFrameNumbers('vidasSpritesheetKey', { start: 1, end: 13 }),
-      frameRate: 10, // Ajuste a velocidade da animação conforme necessário
-      repeat: 0, // Não repete a animação
-      hideOnComplete: true // Oculta o spritesheet quando a animação estiver completa
-    })
-
-    this.physics.add.collider(this.personagem, this.vilao, () => {
-      this.personagem.vida--
-
-      if (this.personagem.vida <= 0) {
-        this.vidasSpritesheet.play('perdeuVida')
-        this.load.shader('desaturateShader', '../js/desaturateShader.frag')
-        this.cameras.main.setShader('desaturateShader')
-        this.game.scene.stop('mapa1')
-        this.game.scene.start('gameOver')
-      }
-    })
+    this.timerText = this.add.text(20, -5, 'Hora', {
+      fontFamily: 'Silkscreen',
+      fontSize: '25px',
+      stroke: '#000000',
+      strokeThickness: 4,
+      fill: '#ffffff'
+    }).setScrollFactor(0)
   }
 
   update () {
+    this.timerText.setText(this.game.data_formatada)
+
     // Atualize a posição do balaoT com base na posição do personagem
     this.balaoT.x = this.personagem.x - 400 // Ajuste conforme necessário
     this.balaoT.y = this.personagem.y - 250 // Ajuste conforme necessário
@@ -678,15 +876,13 @@ export default class mapa1 extends Phaser.Scene {
     } catch (error) {
       console.error(error)
     }
-
-    this.timerText.setText('Tempo: ' + (this.timer.delay - this.timer.elapsed) / 1000)
   }
 
   coletar_moeda (personagem, moeda) {
     this.moedaSom.play()
     moeda.disableBody(true, true)
     this.game.scoreMoeda.score++
-    this.textoMoeda.setText(`moeda: ${this.game.scoreMoeda.score}`)
+    this.textoMoeda.setText(`albuns: ${this.game.scoreMoeda.score}`)
     this.game.socket.emit('artefatos-publicar', this.game.sala, {
       moeda: this.moeda.map((moeda) => moeda.objeto.visible)
     })
@@ -699,5 +895,45 @@ export default class mapa1 extends Phaser.Scene {
     this.gameOverSom.loop = true
     this.game.scene.stop('mapa1')
     this.game.scene.start('gameOver')
+  }
+
+  reduzirVida () {
+    this.personagem.vida--
+
+    if (this.personagem.vida <= 0) {
+      // A vida é zero ou menos, execute a lógica do game over aqui
+      // Por exemplo, você pode redirecionar para a cena 'gameOver'
+      this.game.scene.stop('mapa1')
+      this.game.scene.start('gameOver')
+    } else {
+      // Ainda há vida, você pode realizar outras ações aqui
+      console.log(`Vida restante: ${this.personagem.vida}`)
+    }
+  }
+
+  FimdeJogo () {
+    this.tempo = 2
+    this.relogio = this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        this.tempo--
+        if (this.tempo === 0) {
+          this.relogio.destroy()
+
+          // Verificar se o número de moedas é <= 60
+          if (this.game.scoreMoeda.score <= 1) {
+            // Moedas <= 60, iniciar a cena 'gameOver'
+            this.scene.stop('mapa1')
+            this.scene.start('gameOver')
+          } else {
+            // Moedas > 60, iniciar a cena 'gameWin'
+            this.scene.stop('mapa1')
+            this.scene.start('gameWin')
+          }
+        }
+      },
+      callbackScope: this,
+      loop: true
+    })
   }
 }

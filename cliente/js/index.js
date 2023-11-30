@@ -56,6 +56,26 @@ class Game extends Phaser.Game {
     this.scene.add('gameWin', gameWin)
     this.scene.add('senha', senha)
 
+    this.data = new Date('2024-10-01T00:30:15.000')
+    this.data_formatada = ''
+    setInterval(() => {
+      this.data = new Date(this.data.getTime() - 1000) // Incrementa em 1 segundo o relógio
+      this.data_formatada =
+        (this.data.getMinutes() < 10 ? '0' : '') + // Adiciona 0 quando necessário
+        this.data.getMinutes() +
+        ':' +
+        (this.data.getSeconds() < 10 ? '0' : '') + // Adiciona 0 quando necessário
+        this.data.getSeconds()
+
+      /* Verifica se já chegou a meia noite */
+      // this.fimDoJogo = new Date("2024-01-01T00:00:00.000");
+      this.fimDoJogo = new Date('2024-10-01T00:00:00.000')
+      if (this.data.getTime() === this.fimDoJogo.getTime()) {
+        this.scene.stop('mapa1')
+        this.scene.start('gameOver')
+      }
+    }, 1000)
+
     this.scene.start('abertura')
   }
 }
