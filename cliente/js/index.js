@@ -4,11 +4,15 @@ import sala from './sala.js'
 import mapa1 from './mapa1.js'
 import gameOver from './gameOver.js'
 import gameWin from './gameWin.js'
+import senha from './senha.js'
 
 /* global Phaser */
 class Game extends Phaser.Game {
   constructor () {
     super(config)
+
+    this.id = 3
+    this.valor = 100
 
     this.jogadores = {}
 
@@ -50,6 +54,7 @@ class Game extends Phaser.Game {
     this.scene.add('mapa1', mapa1)
     this.scene.add('gameOver', gameOver)
     this.scene.add('gameWin', gameWin)
+    this.scene.add('senha', senha)
 
     this.scene.start('abertura')
   }
