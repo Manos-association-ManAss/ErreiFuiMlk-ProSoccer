@@ -898,8 +898,8 @@ export default class mapa1 extends Phaser.Scene {
           this.relogio.destroy()
           this.scene.stop('mapa1')
           this.trilha.stop()
-          this.scene.play('gameWin')
-          this.
+          this.game.scene.start('gameWin')
+          this.crianças.play()
         }
       },
       callbackScope: this,
