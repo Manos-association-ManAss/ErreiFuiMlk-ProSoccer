@@ -91,7 +91,7 @@ export default class mapa1 extends Phaser.Scene {
 
     this.load.audio('trilha', './assets/sons/allofthelights.mp3')
     this.load.audio('moedaSom', './assets/sons/moedaSom.mp3')
-    this.load.audio('gameOverSom', './assets/sons/gameOverSom.mp3')
+    this.load.audio('crianças', './assets/sons/crianças.mp3')
   }
 
   create () {
@@ -101,6 +101,7 @@ export default class mapa1 extends Phaser.Scene {
     this.trilha.play()
     this.input.addPointer(3)
     this.moedaSom = this.sound.add('moedaSom')
+    this.crianças = this.sound.add('crianças')
 
     /* mapa */
     this.tilemapMapa = this.make.tilemap({
@@ -895,31 +896,15 @@ export default class mapa1 extends Phaser.Scene {
         this.tempo--
         if (this.tempo === 0) {
           this.relogio.destroy()
-
-          // Verificar se o número de moedas é <= 60
-          if (this.game.scoreMoeda.score < 60) {
-            // Moedas <= 60, iniciar a cena 'gameOver'
-            this.scene.stop('mapa1')
-            this.scene.start('gameWin')
-          } else {
-            // Moedas > 60, iniciar a cena 'gameWin'
-            this.scene.stop('mapa1')
-            this.scene.start('gameOver')
-          }
+          this.scene.stop('mapa1')
+          this.trilha.stop()
+          this.scene.play('gameWin')
+          this.
         }
       },
       callbackScope: this,
       loop: true
     })
-  }
-
-  gameOver () {
-    this.trilha.stop()
-    this.gameOverSom = this.sound.add('gameOverSom')
-    this.gameOverSom.play()
-    this.gameOverSom.loop = true
-    this.game.scene.stop('mapa1')
-    this.game.scene.start('gameOver')
   }
 
   gameWin () {
@@ -928,5 +913,6 @@ export default class mapa1 extends Phaser.Scene {
     this.gameWinSom.play()
     this.game.scene.stop('mapa1')
     this.game.scene.start('gameWin')
+    this.crianças.play()
   }
 }
