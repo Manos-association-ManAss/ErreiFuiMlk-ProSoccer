@@ -24,13 +24,6 @@ export default class gameOver extends Phaser.Scene {
 
     // Inicie a animação
     gameOverSpritesheet.anims.play('gameOverAnimation')
-
-    // Adicione um evento de clique ao spritesheet
-    gameOverSpritesheet.setInteractive()
-    gameOverSpritesheet.on('pointerdown', () => {
-      // Quando o spritesheet for clicado, transiciona para a cena 'abertura'
-      this.scene.start('abertura')
-    })
   }
 
   update () { }

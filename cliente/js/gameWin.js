@@ -14,24 +14,15 @@ export default class GameWin extends Phaser.Scene {
 
   create () {
     // Crie aqui o conteúdo da cena de vitória
-    const text = this.add.text(400, 200, `Você venceu!\nCréditos conquistados: ${this.creditsConquered}`, {
+    const text = this.add.text(400, 200, `Você venceu!\nTijolinhos conquistados: ${this.creditsConquered}`, {
       fontSize: '32px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
 
-    // Botão para voltar ao início
-    const restartButton = this.add.text(400, 400, 'Voltar ao início', {
-      fontSize: '24px',
-      fill: '#fff',
-      backgroundColor: '#000',
-      padding: { x: 10, y: 5 }
+    this.time.delayedCall(10000, () => {
+      this.scene.stop('mapa1')
+      this.scene.start('senha')
     })
-      .setOrigin(0.5)
-      .setInteractive()
-      .on('pointerdown', () => {
-        // Reinicie o jogo aqui (talvez reinicializando variáveis, resetando posições, etc.)
-        this.scene.start('abertura')
-      })
   }
 }

@@ -887,15 +887,6 @@ export default class mapa1 extends Phaser.Scene {
     })
   }
 
-  gameOver () {
-    this.trilha.stop()
-    this.gameOverSom = this.sound.add('gameOverSom')
-    this.gameOverSom.play()
-    this.gameOverSom.loop = true
-    this.game.scene.stop('mapa1')
-    this.game.scene.start('gameOver')
-  }
-
   FimdeJogo () {
     this.tempo = 2
     this.relogio = this.time.addEvent({
@@ -906,7 +897,7 @@ export default class mapa1 extends Phaser.Scene {
           this.relogio.destroy()
 
           // Verificar se o número de moedas é <= 60
-          if (this.game.scoreMoeda.score <= 60) {
+          if (this.game.scoreMoeda.score < 60) {
             // Moedas <= 60, iniciar a cena 'gameOver'
             this.scene.stop('mapa1')
             this.scene.start('gameOver')
@@ -920,5 +911,22 @@ export default class mapa1 extends Phaser.Scene {
       callbackScope: this,
       loop: true
     })
+  }
+
+  gameOver () {
+    this.trilha.stop()
+    this.gameOverSom = this.sound.add('gameOverSom')
+    this.gameOverSom.play()
+    this.gameOverSom.loop = true
+    this.game.scene.stop('mapa1')
+    this.game.scene.start('gameOver')
+  }
+
+  gameWin () {
+    this.trilha.stop()
+    this.gameWinSom = this.sound.add('crianças')
+    this.gameWinSom.play()
+    this.game.scene.stop('mapa1')
+    this.game.scene.start('gameWin')
   }
 }
