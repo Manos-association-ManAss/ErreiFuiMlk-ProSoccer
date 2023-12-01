@@ -900,11 +900,11 @@ export default class mapa1 extends Phaser.Scene {
           if (this.game.scoreMoeda.score < 60) {
             // Moedas <= 60, iniciar a cena 'gameOver'
             this.scene.stop('mapa1')
-            this.scene.start('gameOver')
+            this.scene.start('gameWin')
           } else {
             // Moedas > 60, iniciar a cena 'gameWin'
             this.scene.stop('mapa1')
-            this.scene.start('gameWin')
+            this.scene.start('gameOver')
           }
         }
       },
