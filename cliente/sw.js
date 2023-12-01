@@ -9,6 +9,7 @@ const precacheResources = [
   './assets/abertura/abertura.png',
   './assets/abertura/BotãoAbertura.png',
   './assets/albuns/yeezus.png',
+  '.assets/gameOver/gameOver.png'
   './assets/logo/128.png',
   './assets/logo/192.png',
   './assets/logo/256.png',
